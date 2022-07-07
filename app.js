@@ -1,4 +1,5 @@
 const main = document.querySelector('main')
+const seeResultButton = document.querySelector('.see-result')
 
 const questions = {
     "question-1": {
@@ -20,6 +21,26 @@ const questions = {
             d: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
         },
         correctAnswer: "b"
+    },
+    "question-3": {
+        title: "Question 3.",
+        answers: {
+            a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+            b: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+            c: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+            d: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+        },
+        correctAnswer: "c"
+    },
+    "question-4": {
+        title: "Question 4.",
+        answers: {
+            a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+            b: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+            c: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+            d: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
+        },
+        correctAnswer: "d"
     }
 }
 
@@ -45,7 +66,7 @@ const loadQuestions = () => {
         section.appendChild(h1)
 
         const div = document.createElement('div')
-        div.classList.add(`answers-${index}`)
+        div.setAttribute('data-answers', 'answers')
         section.appendChild(div)
 
         const letters = Object.getOwnPropertyNames(answers)
@@ -66,7 +87,7 @@ const loadQuestions = () => {
 
             const p = document.createElement('p')
             p.classList.add('answers-p')
-            p.textContent = item
+            p.textContent = `${letters[index]}) ${item}`
             label.appendChild(p)
 
         })
@@ -82,17 +103,31 @@ loadQuestions()
 
 const quizContainers = document.querySelectorAll('[data-js="quiz-container"]')
 
-quizContainers.forEach(item => {
-    item.addEventListener('change', event => {
-        const objValues = Object.values(questions)
-        objValues.forEach(item => {
-            const { correctAnswer } = item
-            if(event.target.dataset.letter === correctAnswer) {
-                console.log(event.target.dataset.letter === correctAnswer)
-            }else {
-                console.log(event.target.dataset.letter === correctAnswer)
+const pointsResult = (result) => ({
+    25: 'You got 1/4 questions right!',
+    50: 'You got 2/4 questions right!',
+    75: 'You got 3/4 questions right!',
+    100: 'You got all answers right!'
+})[result] || 'You got all questions wrong =('
+
+seeResultButton.addEventListener('click', () => {
+
+    let points = 0
+    const answersInputs = document.querySelectorAll('[data-answers="answers"]')
+    const questionsValue = Object.values(questions)
+    questionsValue.forEach((item, index) => {
+        const { answers } = item
+        
+        const letters = Object.getOwnPropertyNames(answers)
+        const questionPosition = index
+
+        letters.forEach((letter) => {
+            const letterChecked = document.querySelector(`#letter-${letter}-${questionPosition}`)
+            if(letterChecked.checked && letterChecked.dataset.letter === item.correctAnswer) {
+                points += 25
             }
         })
     })
-})
 
+    console.log(pointsResult(points))
+})
