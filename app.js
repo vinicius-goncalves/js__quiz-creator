@@ -1,48 +1,17 @@
 const main = document.querySelector('main')
+
 const seeResultButton = document.querySelector('.see-result')
 
-const questions = {
-    "question-1": {
-        title: "Question 1.",
-        answers: {
-            a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            b: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            c: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            d: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam."
-        },
-        correctAnswer: "a"
-    },
-    "question-2": {
-        title: "Question 2.",
-        answers: {
-            a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            b: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            c: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            d: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-        },
-        correctAnswer: "b"
-    },
-    "question-3": {
-        title: "Question 3.",
-        answers: {
-            a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            b: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            c: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            d: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-        },
-        correctAnswer: "c"
-    },
-    "question-4": {
-        title: "Question 4.",
-        answers: {
-            a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            b: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            c: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-            d: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, magnam.",
-        },
-        correctAnswer: "d"
-    }
-}
+const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
+const questionCreatorWrapper = document.querySelector('.question-creator')
+const createQuizButton = document.querySelector('[data-button="create-quiz"]')
+
+const modalCreatorWrapper = document.querySelector('.modal-create-quiz-wrapper')
+
+const savedQuestions = 
+    localStorage.getItem('savedQuestions') === null 
+        ? [] 
+        : JSON.parse(localStorage.getItem('savedQuestions'))
 
 const defineElementProperties = (element, obj) => {
     const extractProperties = Object.entries(obj)
@@ -59,10 +28,16 @@ const loadQuestions = () => {
         mainChildren[0].remove()
     }
 
-    const questionsValues = Object.values(questions)
+    // const x = JSON.parse(localStorage.getItem('savedQuestions'))
+
+    if(localStorage.getItem('savedQuestions') === null) {
+        return
+    }
+
+    const questionsValues = JSON.parse(localStorage.getItem('savedQuestions'))
     const finalResult = questionsValues.map((item, index) => {
-        const { title, answers, correctAnswer } = item
-        const extractAnswers = Object.values(answers)
+        const extractQuestion = Object.values(item)
+        const { title, answers } = extractQuestion[0]
 
         const section = document.createElement('section')
         section.classList.add(`quiz-${index}`)
@@ -79,6 +54,7 @@ const loadQuestions = () => {
         const letters = Object.getOwnPropertyNames(answers)
         const questionPosition = index
 
+        const extractAnswers = Object.values(answers)
         extractAnswers.forEach((item, index) => {
             const label = document.createElement('label')
             label.classList.add('answers-label')
@@ -90,10 +66,10 @@ const loadQuestions = () => {
             const input = document.createElement('input')
             defineElementProperties(input, { 
                 type: 'radio',
-                input: `letter-${letters[index]}-${questionPosition}`,
+                id: `letter-${letters[index]}-${questionPosition}`,
                 name: `quiz-answer-${questionPosition}`,
                 'data-letter': letters[index],
-
+                // checked: 'true'
             })
             label.append(input)
 
@@ -125,21 +101,62 @@ const pointsResult = (result) => ({
 seeResultButton.addEventListener('click', () => {
 
     let points = 0
-    const answersInputs = document.querySelectorAll('[data-answers="answers"]')
-    const questionsValue = Object.values(questions)
-    questionsValue.forEach((item, index) => {
-        const { answers } = item
-        
-        const letters = Object.getOwnPropertyNames(answers)
-        const questionPosition = index
+    const answersWrapper = document.querySelectorAll('[data-answers="answers"]')
 
-        letters.forEach((letter) => {
-            const letterChecked = document.querySelector(`#letter-${letter}-${questionPosition}`)
-            if(letterChecked.checked && letterChecked.dataset.letter === item.correctAnswer) {
-                points += 25
-            }
-        })
+    answersWrapper.forEach(item => {
+        const checkedItem = item.querySelector('input[type="radio"]:checked')
+        const extractQuestion = JSON.parse(localStorage.getItem('savedQuestions'))
+        if(checkedItem) {
+            extractQuestion.forEach(item => {
+                const extractOnlyValues = Object.values(item)
+                const { correctAnswer } = extractOnlyValues[0]
+    
+                if(checkedItem.dataset.letter === correctAnswer) {
+                    console.log('Acertou')
+                }else {
+                    console.log('a')
+                }
+            })
+        }
     })
+})
 
-    console.log(pointsResult(points))
+createQuizButton.addEventListener('click', () => {
+
+    const answers = [...document.querySelectorAll('[data-answer="answer"]')]
+    const answersObject = answers.reduce((acc, item) => {
+        acc[item.dataset.letter] = item.value || 'Input a question...'
+        return acc
+    }, {})
+
+    const correctAnswer = questionCreatorWrapper.querySelector('[data-radio="radiocheck"]:checked')
+
+    const newQuestion = {
+        [Math.floor(Math.random() * 9999)]: {
+            title: document.querySelector('.creator-question-title').value,
+            answers: { ...answersObject },
+            correctAnswer: correctAnswer.dataset.letter
+        },
+    }
+
+    savedQuestions.push(newQuestion)
+    localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
+    console.log(JSON.parse(localStorage.getItem('savedQuestions')))
+})
+
+document.querySelector('.close').addEventListener('click', () => {
+    modalCreatorWrapper.classList.remove('active')
+})
+
+navbarWrapper.addEventListener('click', event => {
+    const { navbar } = event.target.dataset
+
+    switch (navbar) {
+        case 'create-new-quiz': 
+            modalCreatorWrapper.classList.add('active')
+            break
+        case 'quiz-dashboard':
+            console.log('b')
+            break
+    }
 })

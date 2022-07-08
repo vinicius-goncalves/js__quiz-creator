@@ -39,6 +39,15 @@ header > a, header nav a {
 
 header nav a {
     font-size: 1.1rem;
+    margin: 0 25px;
+}
+
+header nav a, header a {
+    transition: color 200ms;
+}
+
+header nav a:hover, header a:hover {
+    color: var(--color3);
 }
 
 main {
@@ -100,19 +109,117 @@ input[type="radio"]:checked::before {
     justify-content: center;
 }
 
-.buttons-container input {
+.buttons-container input, 
+.modal-creator-quiz-buttons-wrapper input {
     width: 100%;
     max-width: 250px;
     border-radius: 50px;
     border: 1px solid #643df228;
     background-color: var(--color0);
     box-shadow: 5px 5px 5px var(--color0);
-    color: white;
     padding: 20px;
     font-size: 1.2rem;
     cursor: pointer;
+    color: white;
 }
 
-.buttons-container input:active {
+.modal-creator-quiz-buttons-wrapper input {
+    background-color: var(--color2);
+    color: var(--color5);
+}
+
+.buttons-container input:active, 
+.modal-creator-quiz-buttons-wrapper input {
     transform: scale(.95)
+}
+
+.modal-create-quiz-wrapper {
+    display: none; 
+}
+
+.modal-create-quiz-wrapper.active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    background-color: #0d0d0d93;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-create-quiz-content {
+    position: relative;
+    width: 100%;
+    max-width: 79vw;
+    min-height: 79vh;
+    background-color: var(--color0);
+    border-radius: 10px;
+    box-shadow: 20px 20px var(--color6);
+    user-select: none;
+}
+
+.modal-create-quiz-content i {
+    color: var(--color3);
+    font-size: 48px;
+    cursor: pointer;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+}
+
+.modal-header h1 {
+    color: white;
+    font-size: 3.5rem;
+}
+
+.modal-create-quiz-content h2 {
+    color: white;
+}
+
+.question-creator {
+    display: flex;
+    flex-direction: column;
+}
+
+.question-creator div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 5px 25px;
+}
+
+.question-creator .creator-question-title {
+    width: 100%;
+    max-width: 500px;
+}
+
+.question-creator label {
+    margin: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.question-creator input[type="text"] {  
+    border: none;
+    outline: none;
+    background-color: var(--color3);
+    color: var(--color6);
+    font-size: 1.3rem;
+    margin: 0 10px;
+    text-indent: 5px;
+    border-radius: 4px;
+    padding: 5px;
+    width: 100%;
+}
+
+.modal-creator-quiz-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
 }

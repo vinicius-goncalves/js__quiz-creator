@@ -3,12 +3,15 @@
     <head>
         <title>quiz</title>
         <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     </head>
     <body>
         <header>
             <a href="#">quiz</a>
-            <nav>
-                <a href="#">Create a quiz</a>
+            <nav data-navbar="navbar">
+                <a href="#" data-navbar="create-new-quiz">Create a quiz</a>
+                <a href="#" data-navbar="quiz-dashboard">Dashboard</a>
             </nav>
         </header>
         <main>
@@ -38,6 +41,52 @@
             <input type="button" value="See result" class="see-result">
         </div>
         <!-- Modal for create a quiz -->
+        <div class="modal-create-quiz-wrapper">
+            <div class="modal-create-quiz-content">
+                <div class="modal-header">
+                    <h1>quiz Creator</h1>
+                    <i class="material-icons close">close</i>
+                </div>
+                <div class="question-creator">
+                    <div>
+                        <h2>Title</h2>
+                        <input type="text" class="creator-question-title">
+                    </div>
+                    <div>
+                        <h2>Answer (A)</h2>
+                        <label class="creator-answers-label" for="creator-letter-a">
+                            <input type="radio" id="creator-letter-a" name="creator-quiz-answer" data-letter="a" data-radio="radiocheck" checked>
+                            <input type="text" id="creator-answer-a" name="creator-answer-a" data-answer="answer" value="BBBBBB" data-letter="a">
+                        </label>
+                    </div>
+                   <div>
+                    <h2>Answer (B)</h2>
+                    <label class="creator-answers-label" for="creator-letter-b">
+                        <input type="radio" id="creator-letter-b" name="creator-quiz-answer" 
+                        data-letter="b" data-radio="radiocheck">
+                        <input type="text" id="creator-answer-b" name="creator-answer-b" data-answer="answer" value="AAAAAAA" data-letter="b">
+                    </label>
+                   </div>
+                    <div>
+                        <h2>Answer (C)</h2>
+                        <label class="creator-answers-label" for="creator-letter-c">
+                            <input type="radio" id="creator-letter-c" name="creator-quiz-answer" data-letter="c" data-radio="radiocheck">
+                            <input type="text" id="creator-answer-c" name="creator-answer-c" data-answer="answer" value="CCCCCC" data-letter="c">
+                        </label>
+                    </div>
+                    <div>
+                        <h2>Answer (D)</h2>
+                        <label class="creator-answers-label" for="creator-letter-d">
+                            <input type="radio" id="creator-letter-d" name="creator-quiz-answer" data-letter="d" data-radio="radiocheck">
+                            <input type="text" id="creator-answer-d" name="creator-answer-d" data-answer="answer" value="DDDDD" data-letter="d">
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-creator-quiz-buttons-wrapper">
+                    <input type="button" value="Create quiz" data-button="create-quiz">
+                </div>
+            </div>
+        </div>
     <script src="app.js"></script>
     </body>
 </html>
