@@ -44,6 +44,13 @@ const questions = {
     }
 }
 
+const defineElementProperties = (element, obj) => {
+    const extractProperties = Object.entries(obj)
+    extractProperties.forEach(([ property, value ]) => {
+        element.setAttribute(property, value)
+    })
+}
+
 const loadQuestions = () => {
     
     const mainChildren = [...main.children]
@@ -75,14 +82,19 @@ const loadQuestions = () => {
         extractAnswers.forEach((item, index) => {
             const label = document.createElement('label')
             label.classList.add('answers-label')
-            label.setAttribute('for', `letter-${letters[index]}-${questionPosition}`)
+            defineElementProperties(label, {
+                for: `letter-${letters[index]}-${questionPosition}`
+            })
             div.appendChild(label)
 
             const input = document.createElement('input')
-            input.type = 'radio'
-            input.id = `letter-${letters[index]}-${questionPosition}`
-            input.setAttribute('data-letter', letters[index])
-            input.name = `quiz-answer-${questionPosition}`
+            defineElementProperties(input, { 
+                type: 'radio',
+                input: `letter-${letters[index]}-${questionPosition}`,
+                name: `quiz-answer-${questionPosition}`,
+                'data-letter': letters[index],
+
+            })
             label.append(input)
 
             const p = document.createElement('p')
