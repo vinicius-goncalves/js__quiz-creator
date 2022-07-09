@@ -1,5 +1,7 @@
 const main = document.querySelector('main')
 
+const scrollbarIndicator = document.querySelector('.scrollbar')
+
 const seeResultButton = document.querySelector('.see-result')
 
 const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
@@ -55,7 +57,7 @@ const loadQuestions = () => {
         const questionPosition = index
 
         const extractAnswers = Object.values(answers)
-        extractAnswers.forEach((item, index) => {
+        extractAnswers.forEach((question, index) => {
             const label = document.createElement('label')
             label.classList.add('answers-label')
             defineElementProperties(label, {
@@ -75,7 +77,7 @@ const loadQuestions = () => {
 
             const p = document.createElement('p')
             p.classList.add('answers-p')
-            p.textContent = `${letters[index]}) ${item}`
+            p.textContent = `${letters[index]}) ${question}`
             label.appendChild(p)
 
         })
@@ -91,34 +93,59 @@ loadQuestions()
 
 const quizContainers = document.querySelectorAll('[data-js="quiz-container"]')
 
-const pointsResult = (result) => ({
-    25: 'You got 1/4 questions right!',
-    50: 'You got 2/4 questions right!',
-    75: 'You got 3/4 questions right!',
-    100: 'You got all answers right!'
-})[result] || 'You got all questions wrong =('
+
 
 seeResultButton.addEventListener('click', () => {
 
     let points = 0
-    const answersWrapper = document.querySelectorAll('[data-answers="answers"]')
+    const answersWrapper = [...document.querySelectorAll('[data-answers="answers"]')]
 
-    answersWrapper.forEach(item => {
-        const checkedItem = item.querySelector('input[type="radio"]:checked')
-        const extractQuestion = JSON.parse(localStorage.getItem('savedQuestions'))
-        if(checkedItem) {
-            extractQuestion.forEach(item => {
-                const extractOnlyValues = Object.values(item)
-                const { correctAnswer } = extractOnlyValues[0]
+    const extractQuestion = JSON.parse(localStorage.getItem('savedQuestions'))
     
-                if(checkedItem.dataset.letter === correctAnswer) {
-                    console.log('Acertou')
-                }else {
-                    console.log('a')
-                }
-            })
-        }
+    const howManyQuestionsExist = extractQuestion.reduce((acc, _, index) => {
+        acc[index + 1] = `You got ${index + 1}/${extractQuestion.length} question right!`
+        return acc
+    }, {})
+
+    const pointsResult = (result) => ({
+        ...howManyQuestionsExist
+    })[result] || 'You got all questions wrong =('
+
+    const finalResultChecks = answersWrapper.map(item => {
+        const answerChildren = [...item.children]
+        const hasSomeUncheckBox = answerChildren.every(input => {
+            return input.querySelector('input[type="radio"]:checked') !== null ? '' : document.querySelector('.result').textContent = 'Check an item before'
+        })
+        return hasSomeUncheckBox
     })
+
+    const thereAreNotUncheckedItems = finalResultChecks.every(isUncheck => isUncheck === false)
+
+    if(thereAreNotUncheckedItems) {
+        answersWrapper.forEach((answer, index) => {
+            const inputChecked = answer.querySelector('input[type="radio"]:checked')
+            if(inputChecked) {
+                const extractQuestion = JSON.parse(localStorage.getItem('savedQuestions'))
+                const { correctAnswer } = Object.values(extractQuestion[index])[0]
+                if(inputChecked.dataset.letter === correctAnswer) {
+                    points++
+                }
+            }
+        })
+        
+        document.querySelector('.result').textContent = pointsResult(points)
+    
+        window.scrollTo({ 
+            behavior: 'smooth', 
+            top: document.documentElement.scrollHeight - document.documentElement.clientHeight })
+    }
+})
+
+window.addEventListener('scroll', () => {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop || 0
+    const clientHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
+    const percentage = Math.floor((scrollTop / clientHeight) * 100)
+    scrollbarIndicator.style.width = `${percentage}%`
 })
 
 createQuizButton.addEventListener('click', () => {
