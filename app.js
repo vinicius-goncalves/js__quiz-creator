@@ -182,8 +182,7 @@ navbarWrapper.addEventListener('click', event => {
         case 'create-new-quiz': 
             modalCreatorWrapper.classList.add('active')
             break
-        case 'quiz-dashboard':
-            console.log('b')
-            break
+        // case 'quiz-dashboard':
+        //     break
     }
 })
