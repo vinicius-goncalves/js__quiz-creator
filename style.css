@@ -29,7 +29,6 @@ body {
 
 .scrollbar {
     background: var(--color2);
-    /* width: 10px; */
     height: 2px;
     position: fixed;
     top: 0;
@@ -162,7 +161,7 @@ input[type="radio"]:checked::before {
     display: none; 
 }
 
-.modal-create-quiz-wrapper.active {
+.modal-create-quiz-wrapper {
     position: fixed;
     top: 0;
     left: 0;
@@ -212,7 +211,7 @@ input[type="radio"]:checked::before {
     flex-direction: column;
 }
 
-.question-creator div {
+.question-creator .question-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -224,10 +223,11 @@ input[type="radio"]:checked::before {
     max-width: 500px;
 }
 
-.question-creator label {
-    margin: 30px;
+.input-wrapper {
     display: flex;
     align-items: center;
+    margin: 25px;
+    flex-direction: row;
 }
 
 .question-creator input[type="text"] {  
@@ -241,6 +241,13 @@ input[type="radio"]:checked::before {
     border-radius: 4px;
     padding: 5px;
     width: 100%;
+}
+
+.creator-result {
+    color: white;
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
 }
 
 .modal-creator-quiz-buttons-wrapper {
@@ -257,4 +264,12 @@ input[type="radio"]:checked::before {
 .answers-label.correct {
     border: 1px solid #15ff00;
     border-radius: 10px;
+}
+
+input[type="text"].incorrect {
+    border: 1px solid #ff0000;
+}
+
+input[type="text"].correct {
+    border: 1px solid #15ff15;
 }

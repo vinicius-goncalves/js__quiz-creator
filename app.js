@@ -10,6 +10,8 @@ const createQuizButton = document.querySelector('[data-button="create-quiz"]')
 
 const modalCreatorWrapper = document.querySelector('.modal-create-quiz-wrapper')
 
+const correctAnswerLetter = document.querySelector('.question-creator')
+
 const savedQuestions = 
     localStorage.getItem('savedQuestions') === null 
         ? [] 
@@ -93,8 +95,6 @@ loadQuestions()
 
 const quizContainers = document.querySelectorAll('[data-js="quiz-container"]')
 
-
-
 seeResultButton.addEventListener('click', () => {
 
     let points = 0
@@ -142,33 +142,76 @@ seeResultButton.addEventListener('click', () => {
 })
 
 window.addEventListener('scroll', () => {
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop || 0
-    const clientHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
-    const percentage = Math.floor((scrollTop / clientHeight) * 100)
-    scrollbarIndicator.style.width = `${percentage}%`
+    if(document.documentElement.scrollTop === 0) {
+        document.querySelector('.scrollbar-wrapper').style.display = 'none'
+    }else {
+        document.querySelector('.scrollbar-wrapper').style.display = 'block'
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop || 0
+        const clientHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
+        const percentage = Math.floor((scrollTop / clientHeight) * 100)
+        scrollbarIndicator.style.width = `${percentage}%`
+    }
 })
 
+const pElementEmptyInputs = document.createElement('p')
 createQuizButton.addEventListener('click', () => {
 
-    const answers = [...document.querySelectorAll('[data-answer="answer"]')]
-    const answersObject = answers.reduce((acc, item) => {
-        acc[item.dataset.letter] = item.value || 'Input a question...'
-        return acc
-    }, {})
+    const questionCreatorWrapperChildren = [...questionCreatorWrapper.children]
+    const textInputs = []
+    questionCreatorWrapperChildren.forEach(inputWrapper => {
+        if(inputWrapper.querySelector('input[type="text"]') !== null) {
+            textInputs.push(inputWrapper.querySelector('input[type="text"]'))
+        }
+    })
 
-    const correctAnswer = questionCreatorWrapper.querySelector('[data-radio="radiocheck"]:checked')
+    const answers = [...document.querySelectorAll('[data-creator-answer="creator-answer"]')]
 
-    const newQuestion = {
-        [Math.floor(Math.random() * 9999)]: {
-            title: document.querySelector('.creator-question-title').value,
-            answers: { ...answersObject },
-            correctAnswer: correctAnswer.dataset.letter
-        },
+    const isACorrectInput = (input) => input.value === '' 
+        ? input.classList.add('incorrect') 
+        : input.classList.remove('incorrect')
+
+    const inputsIncorrect = textInputs.map(input => {
+        if(!isACorrectInput(input)) {
+            return input
+        }
+    })
+
+    const containsEmptyInput = inputsIncorrect.some(input => {
+        if(input.classList.contains('incorrect')) {
+            console.log(input)
+            pElementEmptyInputs.innerHTML = `<pre>The question cannot have empty answers</pre>`
+            pElementEmptyInputs.classList.add('creator-result')
+            correctAnswerLetter.append(pElementEmptyInputs)
+            setTimeout(() => pElementEmptyInputs.remove(), 2 * 1000)
+            return input
+        }
+    })
+
+    if(!containsEmptyInput) {
+
+        const answersObject = answers.reduce((acc, input) => {
+            const { dataset: { letter }, value } = input
+            acc[letter] = value
+            return acc
+        }, {})
+    
+        const correctAnswerIntoDOM = questionCreatorWrapper.querySelector('[data-radio="radiocheck"]:checked')
+
+        console.log(correctAnswerIntoDOM)
+    
+        const newQuestion = {
+            [Math.floor(Math.random() * (99999 - 9999 + 1) + 9999)]: {
+                title: document.querySelector('.creator-question-title').value,
+                answers: { ...answersObject },
+                correctAnswer: correctAnswerIntoDOM.dataset.letter
+            },
+        }
+    
+        savedQuestions.push(newQuestion)
+        localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
+        console.log(JSON.parse(localStorage.getItem('savedQuestions')))
     }
 
-    savedQuestions.push(newQuestion)
-    localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
-    console.log(JSON.parse(localStorage.getItem('savedQuestions')))
 })
 
 document.querySelector('.close').addEventListener('click', () => {
@@ -182,7 +225,19 @@ navbarWrapper.addEventListener('click', event => {
         case 'create-new-quiz': 
             modalCreatorWrapper.classList.add('active')
             break
-        // case 'quiz-dashboard':
-        //     break
+        case 'quiz-dashboard':
+            break
     }
+})
+
+const element = document.createElement('p')
+questionCreatorWrapper.addEventListener('change', event => {
+
+    questionCreatorWrapper.querySelector('input[type="radio"]').setAttribute('checked', '')
+
+    element.innerHTML = `<pre>The letter <strong style="inline">${event.target.dataset.letter}</strong> will be marked as correct answer</pre>`
+    element.classList.add('creator-result')
+
+    correctAnswerLetter.insertAdjacentElement('afterend', element)
+        
 })

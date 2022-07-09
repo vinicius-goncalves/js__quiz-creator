@@ -32,38 +32,38 @@
                     <i class="material-icons close">close</i>
                 </div>
                 <div class="question-creator">
-                    <div>
+                    <div class="question-wrapper">
                         <h2>Title</h2>
                         <input type="text" class="creator-question-title">
                     </div>
-                    <div>
+                    <div class="question-wrapper">
                         <h2>Answer (A)</h2>
-                        <label class="creator-answers-label" for="creator-letter-a">
-                            <input type="radio" id="creator-letter-a" name="creator-quiz-answer" data-letter="a" data-radio="radiocheck" checked>
-                            <input type="text" id="creator-answer-a" name="creator-answer-a" data-answer="answer" value="BBBBBB" data-letter="a">
-                        </label>
+                        <div class="creator-answers-div input-wrapper" for="creator-letter-a">
+                            <input type="radio" id="creator-letter-a" name="creator-quiz-answer" data-letter="a" data-radio="radiocheck">
+                            <input type="text" id="creator-answer-a" name="creator-answer-a" data-creator-answer="creator-answer" data-letter="a">
+                        </div>
                     </div>
-                   <div>
+                   <div class="question-wrapper">
                     <h2>Answer (B)</h2>
-                    <label class="creator-answers-label" for="creator-letter-b">
+                    <div class="creator-answers-div input-wrapper input-wrapper" for="creator-letter-b">
                         <input type="radio" id="creator-letter-b" name="creator-quiz-answer" 
                         data-letter="b" data-radio="radiocheck">
-                        <input type="text" id="creator-answer-b" name="creator-answer-b" data-answer="answer" value="AAAAAAA" data-letter="b">
-                    </label>
-                   </div>
-                    <div>
-                        <h2>Answer (C)</h2>
-                        <label class="creator-answers-label" for="creator-letter-c">
-                            <input type="radio" id="creator-letter-c" name="creator-quiz-answer" data-letter="c" data-radio="radiocheck">
-                            <input type="text" id="creator-answer-c" name="creator-answer-c" data-answer="answer" value="CCCCCC" data-letter="c">
-                        </label>
+                        <input type="text" id="creator-answer-b" name="creator-answer-b" data-creator-answer="creator-answer" data-letter="b">
                     </div>
-                    <div>
+                   </div>
+                    <div class="question-wrapper">
+                        <h2>Answer (C)</h2>
+                        <div class="creator-answers-div input-wrapper" for="creator-letter-c">
+                            <input type="radio" id="creator-letter-c" name="creator-quiz-answer" data-letter="c" data-radio="radiocheck">
+                            <input type="text" id="creator-answer-c" name="creator-answer-c" data-creator-answer="creator-answer" data-letter="c">
+                        </div>
+                    </div>
+                    <div class="question-wrapper">
                         <h2>Answer (D)</h2>
-                        <label class="creator-answers-label" for="creator-letter-d">
+                        <div class="creator-answers-div input-wrapper" for="creator-letter-d">
                             <input type="radio" id="creator-letter-d" name="creator-quiz-answer" data-letter="d" data-radio="radiocheck">
-                            <input type="text" id="creator-answer-d" name="creator-answer-d" data-answer="answer" value="DDDDD" data-letter="d">
-                        </label>
+                            <input type="text" id="creator-answer-d" name="creator-answer-d" data-creator-answer="creator-answer" data-letter="d">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-creator-quiz-buttons-wrapper">
