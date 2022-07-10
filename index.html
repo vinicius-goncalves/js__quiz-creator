@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>quiz</title>
+        <link rel="shortcut icon" href="images/favicon-32x32.png">
         <link rel="stylesheet" href="style.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
@@ -19,7 +20,7 @@
                 <a href="#" data-navbar="quiz-dashboard">Dashboard</a>
             </nav>
         </header>
-        <main></main>
+        <main class="questions-wrapper"></main>
         <p class="result"></p>
         <div class="buttons-container">
             <input type="button" value="See result" class="see-result">
@@ -39,7 +40,7 @@
                     <div class="question-wrapper">
                         <h2>Answer (A)</h2>
                         <div class="creator-answers-div input-wrapper" for="creator-letter-a">
-                            <input type="radio" id="creator-letter-a" name="creator-quiz-answer" data-letter="a" data-radio="radiocheck">
+                            <input type="radio" id="creator-letter-a" name="creator-quiz-answer" data-letter="a" data-radio="radiocheck" tabindex="-1">
                             <input type="text" id="creator-answer-a" name="creator-answer-a" data-creator-answer="creator-answer" data-letter="a">
                         </div>
                     </div>
@@ -47,21 +48,21 @@
                     <h2>Answer (B)</h2>
                     <div class="creator-answers-div input-wrapper input-wrapper" for="creator-letter-b">
                         <input type="radio" id="creator-letter-b" name="creator-quiz-answer" 
-                        data-letter="b" data-radio="radiocheck">
+                        data-letter="b" data-radio="radiocheck" tabindex="-1">
                         <input type="text" id="creator-answer-b" name="creator-answer-b" data-creator-answer="creator-answer" data-letter="b">
                     </div>
                    </div>
                     <div class="question-wrapper">
                         <h2>Answer (C)</h2>
                         <div class="creator-answers-div input-wrapper" for="creator-letter-c">
-                            <input type="radio" id="creator-letter-c" name="creator-quiz-answer" data-letter="c" data-radio="radiocheck">
+                            <input type="radio" id="creator-letter-c" name="creator-quiz-answer" data-letter="c" data-radio="radiocheck" tabindex="-1">
                             <input type="text" id="creator-answer-c" name="creator-answer-c" data-creator-answer="creator-answer" data-letter="c">
                         </div>
                     </div>
                     <div class="question-wrapper">
                         <h2>Answer (D)</h2>
                         <div class="creator-answers-div input-wrapper" for="creator-letter-d">
-                            <input type="radio" id="creator-letter-d" name="creator-quiz-answer" data-letter="d" data-radio="radiocheck">
+                            <input type="radio" id="creator-letter-d" name="creator-quiz-answer" data-letter="d" data-radio="radiocheck" tabindex="-1">
                             <input type="text" id="creator-answer-d" name="creator-answer-d" data-creator-answer="creator-answer" data-letter="d">
                         </div>
                     </div>

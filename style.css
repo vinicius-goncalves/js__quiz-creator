@@ -161,7 +161,7 @@ input[type="radio"]:checked::before {
     display: none; 
 }
 
-.modal-create-quiz-wrapper {
+.modal-create-quiz-wrapper.active {
     position: fixed;
     top: 0;
     left: 0;

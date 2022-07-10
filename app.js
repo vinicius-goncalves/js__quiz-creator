@@ -5,8 +5,11 @@ const scrollbarIndicator = document.querySelector('.scrollbar')
 const seeResultButton = document.querySelector('.see-result')
 
 const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
+const questionsWrapper = document.querySelector('.questions-wrapper')
 const questionCreatorWrapper = document.querySelector('.question-creator')
+
 const createQuizButton = document.querySelector('[data-button="create-quiz"]')
+const creatorQuizRadios = document.querySelectorAll('[data-radio="radiocheck"]')
 
 const modalCreatorWrapper = document.querySelector('.modal-create-quiz-wrapper')
 
@@ -75,6 +78,7 @@ const loadQuestions = () => {
                 'data-letter': letters[index],
                 // checked: 'true'
             })
+
             label.append(input)
 
             const p = document.createElement('p')
@@ -82,7 +86,15 @@ const loadQuestions = () => {
             p.textContent = `${letters[index]}) ${question}`
             label.appendChild(p)
 
+            if(localStorage.getItem('checkedItems') !== null) {
+                const checkedItems = JSON.parse(localStorage.getItem('checkedItems'))
+                const letterMatchWithSavedQuestion = input.dataset.letter === checkedItems[questionPosition]
+                if(letterMatchWithSavedQuestion) {
+                    input.setAttribute('checked', '')
+                }
+            }
         })
+
 
         return section
         
@@ -111,10 +123,19 @@ seeResultButton.addEventListener('click', () => {
         ...howManyQuestionsExist
     })[result] || 'You got all questions wrong =('
 
+    let checkedQuestions = 0
+    answersWrapper.forEach(item => {
+        if(item.querySelector('input[type="radio"]:checked')) {
+            checkedQuestions++
+        }
+    })
+
     const finalResultChecks = answersWrapper.map(item => {
         const answerChildren = [...item.children]
         const hasSomeUncheckBox = answerChildren.every(input => {
-            return input.querySelector('input[type="radio"]:checked') !== null ? '' : document.querySelector('.result').textContent = 'Check an item before'
+            if(input.querySelector('input[type="radio"]:checked') === null) {
+                return input.querySelector('input[type="radio"]:checked') !== null ? '' : document.querySelector('.result').textContent = `You must check all questions. Checked ${checkedQuestions}/${JSON.parse(localStorage.getItem('savedQuestions')).length}`
+            }
         })
         return hasSomeUncheckBox
     })
@@ -187,7 +208,20 @@ createQuizButton.addEventListener('click', () => {
         }
     })
 
-    if(!containsEmptyInput) {
+    const childrenRadios = [...creatorQuizRadios]
+    const elementNoChecked = childrenRadios.some(radioInput => radioInput.checked)
+
+    const elementsToVerify = [containsEmptyInput, elementNoChecked]
+    const elementsNotOkay = elementsToVerify.every(element => Boolean(element))
+    
+    const correctAnswerIntoDOM = questionCreatorWrapper.querySelector('[data-radio="radiocheck"]:checked')
+    if(!correctAnswerIntoDOM) {
+        pElementEmptyInputs.textContent = '. You must check a correct answer.'
+        correctAnswerLetter.append(pElementEmptyInputs)
+        return
+    }
+
+    if(!elementsNotOkay) {
 
         const answersObject = answers.reduce((acc, input) => {
             const { dataset: { letter }, value } = input
@@ -195,12 +229,13 @@ createQuizButton.addEventListener('click', () => {
             return acc
         }, {})
     
-        const correctAnswerIntoDOM = questionCreatorWrapper.querySelector('[data-radio="radiocheck"]:checked')
 
         console.log(correctAnswerIntoDOM)
     
+        const questionId = Math.floor(Math.random() * (99999 - 9999 + 1) + 9999)
+
         const newQuestion = {
-            [Math.floor(Math.random() * (99999 - 9999 + 1) + 9999)]: {
+            [questionId]: {
                 title: document.querySelector('.creator-question-title').value,
                 answers: { ...answersObject },
                 correctAnswer: correctAnswerIntoDOM.dataset.letter
@@ -210,8 +245,45 @@ createQuizButton.addEventListener('click', () => {
         savedQuestions.push(newQuestion)
         localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
         console.log(JSON.parse(localStorage.getItem('savedQuestions')))
+
+        document.querySelector('.creator-result').textContent = `Question with ID: ${questionId} created at: ${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}`
+
+        document.querySelector('.creator-question-title').focus()
+
+        questionCreatorWrapper.querySelectorAll('input').forEach(item => {
+            if(item.type === 'radio') {
+                item.removeAttribute('checked')
+            }else {
+                item.value = ''
+            }
+        })
+
+        setTimeout(() => {
+            document.querySelector('.creator-result').remove()
+        }, 2 * 1000)
+
+    }
+})
+
+
+const element = document.createElement('p')
+
+const correctAnswerChangeEvent = (input) => input.addEventListener('change', event => {
+    if(event.target.dataset.letter === undefined) {
+        return
     }
 
+    questionCreatorWrapper.querySelector('input[type="radio"]').setAttribute('checked', '')
+
+    element.innerHTML = `<pre>The letter <strong style="inline">${event.target.dataset.letter}</strong> will be marked as correct answer</pre>`
+    element.classList.add('creator-result')
+
+    correctAnswerLetter.insertAdjacentElement('afterend', element)
+
+})
+
+creatorQuizRadios.forEach(input => {
+    correctAnswerChangeEvent(input)
 })
 
 document.querySelector('.close').addEventListener('click', () => {
@@ -230,14 +302,13 @@ navbarWrapper.addEventListener('click', event => {
     }
 })
 
-const element = document.createElement('p')
-questionCreatorWrapper.addEventListener('change', event => {
+let tempArray = {}
+questionsWrapper.addEventListener('change', () => {
+    const inputsCheckedByGuest = questionsWrapper.querySelectorAll('input[type="radio"]:checked')
+    inputsCheckedByGuest.forEach((item, index) => tempArray[index] = item.dataset.letter)
+    localStorage.setItem('checkedItems', JSON.stringify(tempArray))
+})
 
-    questionCreatorWrapper.querySelector('input[type="radio"]').setAttribute('checked', '')
-
-    element.innerHTML = `<pre>The letter <strong style="inline">${event.target.dataset.letter}</strong> will be marked as correct answer</pre>`
-    element.classList.add('creator-result')
-
-    correctAnswerLetter.insertAdjacentElement('afterend', element)
-        
+window.addEventListener('beforeunload', event => {
+    return event.returnValue = 'Do you have sure?'
 })
