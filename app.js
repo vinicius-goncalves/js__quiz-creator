@@ -9,7 +9,6 @@ const adminModeWrapper = document.querySelector('.admin-mode-wrapper')
 const questionsWrapper = document.querySelector('.questions-wrapper')
 const questionCreatorWrapper = document.querySelector('.question-creator')
 
-
 const createQuizButton = document.querySelector('[data-button="create-quiz"]')
 const creatorQuizRadios = document.querySelectorAll('[data-radio="radiocheck"]')
 
@@ -113,6 +112,8 @@ const loadQuestions = () => {
 
 loadQuestions()
 
+//
+
 const quizContainers = document.querySelectorAll('[data-js="quiz-container"]')
 
 seeResultButton.addEventListener('click', () => {
@@ -128,9 +129,9 @@ seeResultButton.addEventListener('click', () => {
     }, {})
 
     const pointsResult = (result) => ({
-        ...howManyQuestionsExist
+        ...howManyQuestionsExist,
     })[result] || 'You got all questions wrong =('
-
+    
     let checkedQuestions = 0
     answersWrapper.forEach(item => {
         if(item.querySelector('input[type="radio"]:checked')) {
@@ -163,12 +164,28 @@ seeResultButton.addEventListener('click', () => {
         })
         
         document.querySelector('.result').textContent = pointsResult(points)
+
+        if(pointsResult(Object.values(howManyQuestionsExist).length)) {
+            document.querySelector('.result').textContent = 'You got all questions right!!!'
+        }
+        
+        const questionsWrapperChildren = [...questionsWrapper.children]
+        questionsWrapperChildren.forEach(item => {
+            const x = item.querySelectorAll('input[type="radio"]')
+            x.forEach(item => {
+                item.removeAttribute('checked')
+            })
+        })
+
+        localStorage.removeItem('checkedItems')
     
         window.scrollTo({ 
             behavior: 'smooth', 
             top: document.documentElement.scrollHeight - document.documentElement.clientHeight })
     }
 })
+
+//
 
 window.addEventListener('scroll', () => {
     if(document.documentElement.scrollTop === 0) {
@@ -181,6 +198,8 @@ window.addEventListener('scroll', () => {
         scrollbarIndicator.style.width = `${percentage}%`
     }
 })
+
+//
 
 const pElementEmptyInputs = document.createElement('p')
 createQuizButton.addEventListener('click', () => {
@@ -220,7 +239,7 @@ createQuizButton.addEventListener('click', () => {
     const elementNoChecked = childrenRadios.some(radioInput => radioInput.checked)
 
     const elementsToVerify = [containsEmptyInput, elementNoChecked]
-    const elementsNotOkay = elementsToVerify.every(element => Boolean(element))
+    const allElementIsNotOk = elementsToVerify.every(element => Boolean(element))
     
     const correctAnswerIntoDOM = questionCreatorWrapper.querySelector('[data-radio="radiocheck"]:checked')
     if(!correctAnswerIntoDOM) {
@@ -229,15 +248,13 @@ createQuizButton.addEventListener('click', () => {
         return
     }
 
-    if(!elementsNotOkay) {
-
+    if(!allElementIsNotOk) {
         const answersObject = answers.reduce((acc, input) => {
             const { dataset: { letter }, value } = input
             acc[letter] = value
             return acc
         }, {})
     
-
         console.log(correctAnswerIntoDOM)
     
         const questionId = Math.floor(Math.random() * (99999 - 9999 + 1) + 9999)
@@ -273,6 +290,8 @@ createQuizButton.addEventListener('click', () => {
     }
 })
 
+//
+
 const element = document.createElement('p')
 
 const correctAnswerChangeEvent = (input) => input.addEventListener('change', event => {
@@ -291,9 +310,13 @@ creatorQuizRadios.forEach(input => {
     correctAnswerChangeEvent(input)
 })
 
+//
+
 document.querySelector('.close').addEventListener('click', () => {
     modalCreatorWrapper.classList.remove('active')
 })
+
+//
 
 callAdminMode = () => {
     if(guestManagement.adminMode === undefined) {
