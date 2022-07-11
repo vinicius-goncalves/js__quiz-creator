@@ -42,6 +42,10 @@ header {
     background-color: var(--color0);
 }
 
+header nav {
+    display: flex;
+}
+
 header > a {
     font-size: 3.5rem;
 }

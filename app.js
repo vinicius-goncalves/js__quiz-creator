@@ -5,8 +5,10 @@ const scrollbarIndicator = document.querySelector('.scrollbar')
 const seeResultButton = document.querySelector('.see-result')
 
 const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
+const adminModeWrapper = document.querySelector('.admin-mode-wrapper')
 const questionsWrapper = document.querySelector('.questions-wrapper')
 const questionCreatorWrapper = document.querySelector('.question-creator')
+
 
 const createQuizButton = document.querySelector('[data-button="create-quiz"]')
 const creatorQuizRadios = document.querySelectorAll('[data-radio="radiocheck"]')
@@ -19,6 +21,12 @@ const savedQuestions =
     localStorage.getItem('savedQuestions') === null 
         ? [] 
         : JSON.parse(localStorage.getItem('savedQuestions'))
+
+const guestManagement = localStorage.getItem('guestManagement') === null 
+    ? {}
+    : JSON.parse(localStorage.getItem('guestManagement'))
+
+const { adminMode } = guestManagement
 
 const defineElementProperties = (element, obj) => {
     const extractProperties = Object.entries(obj)
@@ -265,15 +273,12 @@ createQuizButton.addEventListener('click', () => {
     }
 })
 
-
 const element = document.createElement('p')
 
 const correctAnswerChangeEvent = (input) => input.addEventListener('change', event => {
     if(event.target.dataset.letter === undefined) {
         return
     }
-
-    questionCreatorWrapper.querySelector('input[type="radio"]').setAttribute('checked', '')
 
     element.innerHTML = `<pre>The letter <strong style="inline">${event.target.dataset.letter}</strong> will be marked as correct answer</pre>`
     element.classList.add('creator-result')
@@ -290,6 +295,57 @@ document.querySelector('.close').addEventListener('click', () => {
     modalCreatorWrapper.classList.remove('active')
 })
 
+callAdminMode = () => {
+    if(guestManagement.adminMode === undefined) {
+        guestManagement.adminMode = 'ON'
+    }
+
+    const guestStatus = guestManagement.adminMode === 'ON' 
+        ? 'ON'
+        : 'OFF'
+
+    const adminButton = adminModeWrapper.querySelector('[data-navbar="admin-mode"]')
+    
+    if(guestStatus === 'ON') {
+        adminButton.textContent = 'Admin Mode: OFF'
+        guestManagement.adminMode = 'OFF'
+    }else {
+        adminButton.textContent = 'Admin Mode: ON'
+        guestManagement.adminMode = 'ON'
+    }
+
+    localStorage.setItem('guestManagement', JSON.stringify(guestManagement))
+
+}
+
+navbarWrapper.style.display = 'none'
+
+const setupNavbar = () => {
+    
+    navbarWrapper.style.display = 'flex'
+
+    if(guestManagement.adminMode === 'ON') {
+        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 'Admin Mode: <span style="color: #15ff00; font-weight: bold"">ON</span>'
+    }else {
+        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 'Admin Mode: <span style="color: #ff0000; font-weight: bold"">OFF</span>'
+    }
+
+    const { adminMode } = guestManagement
+    const navbarChildren = [...navbarWrapper.children]
+    
+    navbarChildren.forEach(item => {
+        const adminModeOn = item.dataset.status.includes(adminMode === 'ON' ? 'admin-mode-on' : 'ignore')
+        if(adminModeOn) {
+            item.style.display = 'block'
+            return
+        }
+        item.style.display = 'none'
+    })
+    
+    adminModeWrapper.removeAttribute('style')
+
+}
+
 navbarWrapper.addEventListener('click', event => {
     const { navbar } = event.target.dataset
 
@@ -299,7 +355,15 @@ navbarWrapper.addEventListener('click', event => {
             break
         case 'quiz-dashboard':
             break
+        case 'admin-mode':
+            callAdminMode()
+            setupNavbar()
+            break
     }
+})
+
+window.addEventListener('load', () => {
+    setupNavbar()
 })
 
 let tempArray = {}
@@ -309,6 +373,6 @@ questionsWrapper.addEventListener('change', () => {
     localStorage.setItem('checkedItems', JSON.stringify(tempArray))
 })
 
-window.addEventListener('beforeunload', event => {
-    return event.returnValue = 'Do you have sure?'
-})
+// window.addEventListener('beforeunload', event => {
+//     return event.returnValue = 'Do you have sure?'
+// })

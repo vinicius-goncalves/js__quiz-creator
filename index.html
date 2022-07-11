@@ -16,8 +16,11 @@
         <header>
             <a href="#">quiz</a>
             <nav data-navbar="navbar">
-                <a href="#" data-navbar="create-new-quiz">Create a quiz</a>
-                <a href="#" data-navbar="quiz-dashboard">Dashboard</a>
+                <a href="#" data-navbar="create-new-quiz" data-status="admin-mode-on">Create a quiz</a>
+                <a href="#" data-navbar="quiz-dashboard" data-status="admin-mode-on">Dashboard</a>
+                <div class="admin-mode-wrapper" data-status="ignore">
+                    <a href="#" data-navbar="admin-mode" data-status="admin-mode">Admin Mode</a>
+                </div>
             </nav>
         </header>
         <main class="questions-wrapper"></main>
