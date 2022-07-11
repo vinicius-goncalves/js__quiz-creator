@@ -34,13 +34,25 @@ const defineElementProperties = (element, obj) => {
     })
 }
 
+const defineElementStyle = (obj) => {
+    const extractObjectPairs = Object.entries(obj)
+    const removeLastSpace = /[\s]$/g
+    const finalObject = extractObjectPairs.reduce((acc, item) => {
+        acc += `${item[0]}: ${item[1]}; `
+        return acc
+    }, '').replace(removeLastSpace, '')
+    return finalObject
+}
+
+
+
 const loadQuestions = () => {
     
-    const mainChildren = [...main.children]
+    // const mainChildren = [...main.children]
 
-    for(let i = 0; i < mainChildren.length; i++) {
-        mainChildren[0].remove()
-    }
+    // for(let i = 0; i < mainChildren.length; i++) {
+    //     mainChildren[0].remove()
+    // }
 
     // const x = JSON.parse(localStorage.getItem('savedQuestions'))
 
@@ -53,13 +65,49 @@ const loadQuestions = () => {
         const extractQuestion = Object.values(item)
         const { title, answers } = extractQuestion[0]
 
+        const extractQuestionId = Object.getOwnPropertyNames(item)
+        const [ questionId ] = extractQuestionId
+
         const section = document.createElement('section')
         section.classList.add(`quiz-${index}`)
         section.setAttribute('data-js', 'quiz-container')
+        section.setAttribute('data-question', questionId)
+        
+        const divElementQuestionWrapper = document.createElement('div')
+        divElementQuestionWrapper.classList.add('quiz-header-wrapper')
+        divElementQuestionWrapper.setAttribute('style', defineElementStyle({ 
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'space-between'
+        }))
+        
+        section.appendChild(divElementQuestionWrapper)
 
         const h1 = document.createElement('h1')
         h1.textContent = title
-        section.appendChild(h1)
+        divElementQuestionWrapper.appendChild(h1)
+        
+        if(adminMode === 'ON') {
+
+            const divElementEditItemsWrapper = document.createElement('div')
+            divElementEditItemsWrapper.classList.add('edit-items-wrapper')
+
+            const iElement_trashIcon = document.createElement('i')
+            iElement_trashIcon.classList.add('material-icons')
+            iElement_trashIcon.textContent = 'delete'
+            iElement_trashIcon.setAttribute('style', defineElementStyle({ 
+                margin: '0 25px'
+            }))
+            iElement_trashIcon.setAttribute('data-delete', questionId)
+
+            const iElement_editIcon = document.createElement('i')
+            iElement_editIcon.classList.add('material-icons')
+            iElement_editIcon.textContent = 'edit'
+            iElement_editIcon.setAttribute('data-edit', questionId)
+
+            divElementEditItemsWrapper.append(iElement_trashIcon, iElement_editIcon)
+            divElementQuestionWrapper.appendChild(divElementEditItemsWrapper)
+        }
 
         const div = document.createElement('div')
         div.setAttribute('data-answers', 'answers')
@@ -101,7 +149,6 @@ const loadQuestions = () => {
                 }
             }
         })
-
 
         return section
         
@@ -263,7 +310,8 @@ createQuizButton.addEventListener('click', () => {
             [questionId]: {
                 title: document.querySelector('.creator-question-title').value,
                 answers: { ...answersObject },
-                correctAnswer: correctAnswerIntoDOM.dataset.letter
+                correctAnswer: correctAnswerIntoDOM.dataset.letter,
+                questionId
             },
         }
     
@@ -399,3 +447,65 @@ questionsWrapper.addEventListener('change', () => {
 // window.addEventListener('beforeunload', event => {
 //     return event.returnValue = 'Do you have sure?'
 // })
+
+//
+
+const deleteQuestion = (id) => {
+    
+    console.log('passou')
+
+    savedQuestions.filter((item, index) => {
+        const objectQuestionKey = Object.keys(item)
+        console.log(item[objectQuestionKey].questionId)
+        if(item[objectQuestionKey].questionId === id) {
+            return savedQuestions.splice(index, 1)
+        }
+    })
+
+    localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
+
+    const x = [...questionsWrapper.children]
+    x.forEach(item => {
+        item.remove()
+    })
+
+    loadQuestions()
+    console.log(savedQuestions)
+    // loadQuestions()
+
+}
+
+questionsWrapper.addEventListener('click', event => {
+    const getOnlyProperty = Object.keys(event.target.dataset)
+
+    const [ property ] = getOnlyProperty
+    const { 
+        ['edit']: itemEdit, 
+        ['delete']: itemDelete 
+    } = event.target.dataset
+
+    switch(property) {
+        case 'edit':
+            
+            break
+        case 'delete':
+            deleteQuestion(Number(itemDelete))
+            break
+    }
+})
+
+document.querySelector('[data-button="generate-lorem"]').addEventListener('click', () => {
+
+     document.querySelector('.creator-question-title').value = 'Lorem ipsum dolor. ' + Math.floor(Math.random() * 9999)
+
+    document.querySelector('#creator-answer-a').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+    document.querySelector('#creator-answer-b').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+    document.querySelector('#creator-answer-c').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+    document.querySelector('#creator-answer-d').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+
+    const letters = ['a', 'b', 'c', 'd']
+    const randomPosition = letters[Math.floor(Math.random() * letters.length)]
+
+    document.querySelector(`#creator-letter-${randomPosition}`).setAttribute('checked', '')
+
+})
