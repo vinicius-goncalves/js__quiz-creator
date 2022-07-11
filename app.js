@@ -273,8 +273,6 @@ const correctAnswerChangeEvent = (input) => input.addEventListener('change', eve
         return
     }
 
-    questionCreatorWrapper.querySelector('input[type="radio"]').setAttribute('checked', '')
-
     element.innerHTML = `<pre>The letter <strong style="inline">${event.target.dataset.letter}</strong> will be marked as correct answer</pre>`
     element.classList.add('creator-result')
 
