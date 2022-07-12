@@ -1,6 +1,11 @@
-const scrollbarIndicator = document.querySelector('.scrollbar')
+import { 
+    defineElementProperties, 
+    defineElementStyle,
+    setSavedItemStringify,  
+    getSavedItemParsed,
+    verifyIfLocalStorageItemIsNull } from './utils.js'
 
-const seeResultButton = document.querySelector('.see-result')
+const scrollbarIndicator = document.querySelector('.scrollbar')
 
 const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
 const adminModeWrapper = document.querySelector('.admin-mode-wrapper')
@@ -14,20 +19,11 @@ const modalCreatorWrapper = document.querySelector('.modal-create-quiz-wrapper')
 
 const correctAnswerLetter = document.querySelector('.question-creator')
 
-let quizDisable = false
+const savedQuestions = verifyIfLocalStorageItemIsNull('savedQuestions', [], item => JSON.parse(item))
+const guestManagement = verifyIfLocalStorageItemIsNull('guestManagement', {}, item => JSON.parse(item))
 
-const savedQuestions = 
-    localStorage.getItem('savedQuestions') === null 
-        ? [] 
-        : JSON.parse(localStorage.getItem('savedQuestions'))
-const tempSavedQuestions = localStorage.getItem('temp') === null ? [] : JSON.parse(localStorage.getItem('temp'))
-
-const guestManagement = localStorage.getItem('guestManagement') === null 
-    ? {}
-    : JSON.parse(localStorage.getItem('guestManagement'))
-    
 const initialQuestion = {
-    00001: {
+    1: {
         title: 'If today is Saturday, what is the date going to be tomorrow?',
         answers: {
             a: 'Sunday',
@@ -36,38 +32,28 @@ const initialQuestion = {
             d: 'Wednesday'
         },
         correctAnswer: 'a',
-        questionId: 00001
+        questionId: 1
     }
 }
 
 window.addEventListener('load', () => {
+
+    if(guestManagement.adminMode === undefined) {
+        guestManagement.adminMode = 'OFF'
+    }
+
+    setupNavbar()
+
     if(guestManagement.isCurrent === undefined) {
         savedQuestions.push(initialQuestion)
-        localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
+        setSavedItemStringify('savedQuestions', savedQuestions)
         loadQuestions()
     }
 
     guestManagement.isCurrent = true
-    localStorage.setItem('guestManagement', JSON.stringify(guestManagement))
+    setSavedItemStringify('guestManagement', guestManagement)
     
 })
-
-const defineElementProperties = (element, obj) => {
-    const extractProperties = Object.entries(obj)
-    extractProperties.forEach(([ property, value ]) => {
-        element.setAttribute(property, value)
-    })
-}
-
-const defineElementStyle = (obj) => {
-    const extractObjectPairs = Object.entries(obj)
-    const removeLastSpace = /[\s]$/g
-    const finalObject = extractObjectPairs.reduce((acc, item) => {
-        acc += `${item[0]}: ${item[1]}; `
-        return acc
-    }, '').replace(removeLastSpace, '')
-    return finalObject
-}
 
 const loadQuestions = () => {
     
@@ -77,7 +63,7 @@ const loadQuestions = () => {
         questionsWrapperChildren[0].remove()
     }
     
-    if(localStorage.getItem('savedQuestions') === null) {
+    if(getSavedItemParsed('savedQuestions') === null) {
         return
     }
 
@@ -179,98 +165,6 @@ const loadQuestions = () => {
 }
 
 loadQuestions()
-
-//
-
-const quizContainers = document.querySelectorAll('[data-js="quiz-container"]')
-
-seeResultButton.addEventListener('click', () => {
-
-    let thereAreNotUncheckedItemsExternal = null
-
-    if(!quizDisable) {
-        let points = 0
-        const answersWrapper = [...document.querySelectorAll('[data-answers="answers"]')]
-
-        const extractQuestion = JSON.parse(localStorage.getItem('savedQuestions'))
-        
-        const howManyQuestionsExist = extractQuestion.reduce((acc, _, index) => {
-            acc[index + 1] = `You got ${index + 1}/${extractQuestion.length} question right!`
-            return acc
-        }, {})
-
-        const pointsResult = (result) => ({
-            ...howManyQuestionsExist,
-        })[result] || 'You got all questions wrong =('
-        
-        let checkedQuestions = 0
-        answersWrapper.forEach(item => {
-            if(item.querySelector('input[type="radio"]:checked')) {
-                checkedQuestions++
-            }
-        })
-
-        const finalResultChecks = answersWrapper.map(item => {
-            const answerChildren = [...item.children]
-            const hasSomeUncheckBox = answerChildren.every(input => {
-                if(input.querySelector('input[type="radio"]:checked') === null) {
-                    return input.querySelector('input[type="radio"]:checked') !== null ? '' : document.querySelector('.result').textContent = `You must check all questions. Checked ${checkedQuestions}/${JSON.parse(localStorage.getItem('savedQuestions')).length}`
-                }
-            })
-            return hasSomeUncheckBox
-        })
-
-        const thereAreNotUncheckedItems = finalResultChecks.every(isUncheck => isUncheck === false)
-        thereAreNotUncheckedItemsExternal = thereAreNotUncheckedItems
-
-        if(thereAreNotUncheckedItems) {
-            answersWrapper.forEach((answer, index) => {
-                const inputChecked = answer.querySelector('input[type="radio"]:checked')
-                if(inputChecked) {
-                    const extractQuestion = JSON.parse(localStorage.getItem('savedQuestions'))
-                    const { correctAnswer } = Object.values(extractQuestion[index])[0]
-                    if(inputChecked.dataset.letter === correctAnswer) {
-                        inputChecked.parentElement.classList.add('correct')
-                        points++
-                    }else {
-                        inputChecked.parentElement.classList.add('incorrect')
-                    }
-                }
-            })
-            
-            if(points === JSON.parse(localStorage.getItem('savedQuestions')).length) {
-                document.querySelector('.result').textContent = 'You got all questions right!!!'
-            }else {
-                document.querySelector('.result').textContent = pointsResult(points)
-            }
-            
-            const questionsWrapperChildren = [...questionsWrapper.children]
-            questionsWrapperChildren.forEach(item => {
-                const radioInputs = item.querySelectorAll('input[type="radio"]:checked')
-                radioInputs.forEach(input => {
-                    input.setAttribute('checked', 'false')
-                })
-            })
-        }
-
-        if(thereAreNotUncheckedItemsExternal) {
-            quizDisable = true
-        }
-
-        setTimeout(() => {
-            localStorage.removeItem('checkedItems')
-            window.location.reload()
-        }, 2000)
-
-        console.log(quizDisable)
-    
-        window.scrollTo({ 
-            behavior: 'smooth', 
-            top: document.documentElement.scrollHeight - document.documentElement.clientHeight })
-    }
-})
-
-//
 
 window.addEventListener('scroll', () => {
     if(document.documentElement.scrollTop === 0) {
@@ -414,11 +308,7 @@ document.querySelector('.close').addEventListener('click', () => {
 //
 
 
-callAdminMode = () => {
-    
-    if(guestManagement.adminMode === undefined) {
-        guestManagement.adminMode = 'ON'
-    }
+const callAdminMode = () => {
 
     const guestStatus = guestManagement.adminMode === 'ON' 
         ? 'ON'
@@ -494,28 +384,20 @@ navbarWrapper.addEventListener('click', event => {
     }
 })
 
-window.addEventListener('load', () => {
-    setupNavbar()
-})
-
-let tempArray = {}
+let questionsChecked = {}
 questionsWrapper.addEventListener('change', () => {
     if(quizDisable) {
         return
     }
 
-    console.log(localStorage.getItem('checkedItems'))
-
     const inputsCheckedByGuest = questionsWrapper.querySelectorAll('input[type="radio"]:checked')
-    inputsCheckedByGuest.forEach((item, index) => tempArray[index] = item.dataset.letter)
-    localStorage.setItem('checkedItems', JSON.stringify(tempArray))
+    inputsCheckedByGuest.forEach((item, index) => questionsChecked[index] = item.dataset.letter)
+    setSavedItemStringify('checkedItems', questionsChecked)
 })
 
 // window.addEventListener('beforeunload', event => {
 //     return event.returnValue = 'Do you have sure?'
 // })
-
-//
 
 const deleteQuestion = (id) => {
 
@@ -554,20 +436,4 @@ questionsWrapper.addEventListener('click', event => {
             deleteQuestion(Number(itemDelete))
             break
     }
-})
-
-document.querySelector('[data-button="generate-lorem"]').addEventListener('click', () => {
-
-     document.querySelector('.creator-question-title').value = 'Lorem ipsum dolor. ' + Math.floor(Math.random() * 9999)
-
-    document.querySelector('#creator-answer-a').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-    document.querySelector('#creator-answer-b').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-    document.querySelector('#creator-answer-c').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-    document.querySelector('#creator-answer-d').value = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-
-    const letters = ['a', 'b', 'c', 'd']
-    const randomPosition = letters[Math.floor(Math.random() * letters.length)]
-
-    document.querySelector(`#creator-letter-${randomPosition}`).setAttribute('checked', 'true')
-
 })
