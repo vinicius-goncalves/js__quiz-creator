@@ -30,11 +30,11 @@
             <input type="button" value="See result" class="see-result">
         </div>
         <!-- Modal for create a quiz -->
-        <div class="modal-create-quiz-wrapper">
+        <div class="modal-create-quiz-wrapper" data-js="modal-wrapper">
             <div class="modal-create-quiz-content">
                 <div class="modal-header">
                     <h1>quiz Creator</h1>
-                    <i class="material-icons close">close</i>
+                    <i class="material-icons close" data-close="modal-create-quiz-wrapper">close</i>
                 </div>
                 <div class="question-creator">
                     <div class="question-wrapper">
@@ -74,6 +74,15 @@
                 <div class="modal-creator-quiz-buttons-wrapper">
                     <input type="button" value="Generate Lorem" data-button="generate-lorem">
                     <input type="button" value="Create quiz" data-button="create-quiz">
+                </div>
+            </div>
+        </div>
+        <!-- Modal for dashboard -->
+        <div class="modal-dashboard-wrapper" data-js="modal-wrapper">
+            <div class="modal-dashboard-content">
+                <div class="modal-header">
+                    <h1>quiz Dashboard</h1>
+                    <i class="material-icons close" data-close="modal-dashboard-wrapper">close</i>
                 </div>
             </div>
         </div>

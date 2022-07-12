@@ -173,7 +173,7 @@ input[type="radio"]:checked::before {
     display: none; 
 }
 
-.modal-create-quiz-wrapper {
+.modal-create-quiz-wrapper.active {
     position: fixed;
     top: 0;
     left: 0;
@@ -196,7 +196,8 @@ input[type="radio"]:checked::before {
     user-select: none;
 }
 
-.modal-create-quiz-content i {
+.modal-create-quiz-content i,
+.modal-dashboard-content i {
     color: var(--color3);
     font-size: 48px;
     cursor: pointer;
@@ -284,4 +285,34 @@ input[type="text"].incorrect {
 
 input[type="text"].correct {
     border: 1px solid #15ff15;
+}
+
+/*
+    Dashboard
+*/
+.modal-dashboard-wrapper {
+    display: none;    
+}
+
+.modal-dashboard-wrapper.active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d0d0d93;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-dashboard-content {
+    position: absolute;
+    width: 100%;
+    max-width: 79vw;
+    min-height: 79vh;
+    background-color: var(--color0);
+    border-radius: 10px;
+    box-shadow: 20px 20px var(--color6);
+    user-select: none;
 }

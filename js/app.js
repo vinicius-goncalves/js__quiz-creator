@@ -15,7 +15,10 @@ const questionCreatorWrapper = document.querySelector('.question-creator')
 const createQuizButton = document.querySelector('[data-button="create-quiz"]')
 const creatorQuizRadios = document.querySelectorAll('[data-radio="radiocheck"]')
 
+const modalWrappers = document.querySelectorAll('[data-js="modal-wrapper"]')
 const modalCreatorWrapper = document.querySelector('.modal-create-quiz-wrapper')
+const modalDashboardWrapper = document.querySelector('.modal-dashboard-wrapper')
+const modalHeaders = document.querySelectorAll('.modal-header')
 
 const correctAnswerLetter = document.querySelector('.question-creator')
 
@@ -301,13 +304,6 @@ creatorQuizRadios.forEach(input => {
 
 //
 
-document.querySelector('.close').addEventListener('click', () => {
-    modalCreatorWrapper.classList.remove('active')
-})
-
-//
-
-
 const callAdminMode = () => {
 
     const guestStatus = guestManagement.adminMode === 'ON' 
@@ -376,6 +372,7 @@ navbarWrapper.addEventListener('click', event => {
             modalCreatorWrapper.classList.add('active')
             break
         case 'quiz-dashboard':
+            modalDashboardWrapper.classList.add('active')
             break
         case 'admin-mode':
             callAdminMode()
@@ -399,41 +396,15 @@ questionsWrapper.addEventListener('change', () => {
 //     return event.returnValue = 'Do you have sure?'
 // })
 
-const deleteQuestion = (id) => {
-
-    savedQuestions.filter((item, index) => {
-        const objectQuestionKey = Object.keys(item)
-        console.log(item[objectQuestionKey].questionId)
-        if(item[objectQuestionKey].questionId === id) {
-            return savedQuestions.splice(index, 1)
-        }
+modalWrappers.forEach(modalWrapper => {
+    modalWrapper.addEventListener('click', event => {
+        event.target.classList.remove('active')
     })
+})
 
-    localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
-
-    const questionWrapperChildren = [...questionsWrapper.children]
-    questionWrapperChildren.forEach(item => {
-        item.remove()
+modalHeaders.forEach(modalHeader => {
+    modalHeader.addEventListener('click', event => {
+        const { close } = event.target.dataset
+        document.querySelector(`.${close}`).classList.remove('active')
     })
-
-    loadQuestions()
-
-}
-
-questionsWrapper.addEventListener('click', event => {
-    const getOnlyProperty = Object.keys(event.target.dataset)
-
-    const [ property ] = getOnlyProperty
-    const { 
-        ['edit']: itemEdit, 
-        ['delete']: itemDelete 
-    } = event.target.dataset
-
-    switch(property) {
-        case 'edit':
-            break
-        case 'delete':
-            deleteQuestion(Number(itemDelete))
-            break
-    }
 })
