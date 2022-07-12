@@ -1,5 +1,3 @@
-const main = document.querySelector('main')
-
 const scrollbarIndicator = document.querySelector('.scrollbar')
 
 const seeResultButton = document.querySelector('.see-result')
@@ -25,8 +23,6 @@ const guestManagement = localStorage.getItem('guestManagement') === null
     ? {}
     : JSON.parse(localStorage.getItem('guestManagement'))
 
-const { adminMode } = guestManagement
-
 const defineElementProperties = (element, obj) => {
     const extractProperties = Object.entries(obj)
     extractProperties.forEach(([ property, value ]) => {
@@ -44,18 +40,14 @@ const defineElementStyle = (obj) => {
     return finalObject
 }
 
-
-
 const loadQuestions = () => {
     
-    // const mainChildren = [...main.children]
+    const questionsWrapperChildren = [...questionsWrapper.children]
 
-    // for(let i = 0; i < mainChildren.length; i++) {
-    //     mainChildren[0].remove()
-    // }
-
-    // const x = JSON.parse(localStorage.getItem('savedQuestions'))
-
+    for(let i = 0; i < questionsWrapperChildren.length; i++) {
+        questionsWrapperChildren[0].remove()
+    }
+    
     if(localStorage.getItem('savedQuestions') === null) {
         return
     }
@@ -86,8 +78,8 @@ const loadQuestions = () => {
         const h1 = document.createElement('h1')
         h1.textContent = title
         divElementQuestionWrapper.appendChild(h1)
-        
-        if(adminMode === 'ON') {
+
+        if(guestManagement.adminMode === 'ON') {
 
             const divElementEditItemsWrapper = document.createElement('div')
             divElementEditItemsWrapper.classList.add('edit-items-wrapper')
@@ -154,7 +146,7 @@ const loadQuestions = () => {
         
     })
     
-    finalResult.forEach(item => main.appendChild(item));
+    finalResult.forEach(item => questionsWrapper.appendChild(item));
 }
 
 loadQuestions()
@@ -210,10 +202,10 @@ seeResultButton.addEventListener('click', () => {
             }
         })
         
-        document.querySelector('.result').textContent = pointsResult(points)
-
-        if(pointsResult(Object.values(howManyQuestionsExist).length)) {
+        if(points === JSON.parse(localStorage.getItem('savedQuestions')).length) {
             document.querySelector('.result').textContent = 'You got all questions right!!!'
+        }else {
+            document.querySelector('.result').textContent = pointsResult(points)
         }
         
         const questionsWrapperChildren = [...questionsWrapper.children]
@@ -366,7 +358,9 @@ document.querySelector('.close').addEventListener('click', () => {
 
 //
 
+
 callAdminMode = () => {
+    
     if(guestManagement.adminMode === undefined) {
         guestManagement.adminMode = 'ON'
     }
@@ -376,16 +370,23 @@ callAdminMode = () => {
         : 'OFF'
 
     const adminButton = adminModeWrapper.querySelector('[data-navbar="admin-mode"]')
-    
+        
     if(guestStatus === 'ON') {
         adminButton.textContent = 'Admin Mode: OFF'
         guestManagement.adminMode = 'OFF'
+        
     }else {
         adminButton.textContent = 'Admin Mode: ON'
         guestManagement.adminMode = 'ON'
     }
-
+    
     localStorage.setItem('guestManagement', JSON.stringify(guestManagement))
+
+    const questionWrapperChildren = [...questionsWrapper.children]
+    questionWrapperChildren.forEach(item => {
+        item.remove()
+    })
+    loadQuestions()
 
 }
 
@@ -395,10 +396,15 @@ const setupNavbar = () => {
     
     navbarWrapper.style.display = 'flex'
 
+    const actualAdminStatus = (color, status) => 
+        `Admin Mode: <span style="color: ${color}; font-weight: bold;" data-navbar="admin-mode">${status}</span>`
+
     if(guestManagement.adminMode === 'ON') {
-        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 'Admin Mode: <span style="color: #15ff00; font-weight: bold"">ON</span>'
+        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 
+            actualAdminStatus('#15ff00', 'ON')
     }else {
-        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 'Admin Mode: <span style="color: #ff0000; font-weight: bold"">OFF</span>'
+        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 
+            actualAdminStatus('#ff0000', 'OFF')
     }
 
     const { adminMode } = guestManagement
@@ -451,8 +457,6 @@ questionsWrapper.addEventListener('change', () => {
 //
 
 const deleteQuestion = (id) => {
-    
-    console.log('passou')
 
     savedQuestions.filter((item, index) => {
         const objectQuestionKey = Object.keys(item)
@@ -464,14 +468,12 @@ const deleteQuestion = (id) => {
 
     localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
 
-    const x = [...questionsWrapper.children]
-    x.forEach(item => {
+    const questionWrapperChildren = [...questionsWrapper.children]
+    questionWrapperChildren.forEach(item => {
         item.remove()
     })
 
     loadQuestions()
-    console.log(savedQuestions)
-    // loadQuestions()
 
 }
 
@@ -486,7 +488,6 @@ questionsWrapper.addEventListener('click', event => {
 
     switch(property) {
         case 'edit':
-            
             break
         case 'delete':
             deleteQuestion(Number(itemDelete))
