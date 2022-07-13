@@ -1,6 +1,10 @@
-const questionsWrapper = document.querySelector('.questions-wrapper')
+import { loadQuestions } from './app.js'
+import { getSavedItemParsed } from './utils.js'
 
-const deleteQuestion = (id) => {
+const questionsWrapper = document.querySelector('.questions-wrapper')
+const savedQuestions = getSavedItemParsed('savedQuestions')
+
+export const deleteQuestion = (id) => {
 
     savedQuestions.filter((item, index) => {
         const objectQuestionKey = Object.keys(item)
@@ -20,21 +24,3 @@ const deleteQuestion = (id) => {
     loadQuestions()
 
 }
-
-questionsWrapper.addEventListener('click', event => {
-    const getOnlyProperty = Object.keys(event.target.dataset)
-
-    const [ property ] = getOnlyProperty
-    const { 
-        ['edit']: itemEdit, 
-        ['delete']: itemDelete 
-    } = event.target.dataset
-
-    switch(property) {
-        case 'edit':
-            break
-        case 'delete':
-            deleteQuestion(Number(itemDelete))
-            break
-    }
-})
