@@ -5,6 +5,8 @@ import {
     getSavedItemParsed,
     verifyIfLocalStorageItemIsNull } from './utils.js'
 
+import { deleteQuestion } from './quiz-tools.js'
+
 const scrollbarIndicator = document.querySelector('.scrollbar')
 
 const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
@@ -58,7 +60,7 @@ window.addEventListener('load', () => {
     
 })
 
-const loadQuestions = () => {
+export const loadQuestions = () => {
     
     const questionsWrapperChildren = [...questionsWrapper.children]
 
@@ -316,7 +318,7 @@ const callAdminMode = () => {
         adminButton.textContent = 'Admin Mode: OFF'
         guestManagement.adminMode = 'OFF'
         
-    }else {
+    } else {
         adminButton.textContent = 'Admin Mode: ON'
         guestManagement.adminMode = 'ON'
     }
@@ -328,7 +330,6 @@ const callAdminMode = () => {
         item.remove()
     })
     loadQuestions()
-
 }
 
 navbarWrapper.style.display = 'none'
@@ -404,7 +405,30 @@ modalWrappers.forEach(modalWrapper => {
 
 modalHeaders.forEach(modalHeader => {
     modalHeader.addEventListener('click', event => {
-        const { close } = event.target.dataset
-        document.querySelector(`.${close}`).classList.remove('active')
+        const { ['close']: closeButton } = event.target.dataset
+
+        if(!closeButton) {
+            return
+        }
+        
+        document.querySelector(`.${closeButton}`).classList.remove('active')
     })
+})
+
+questionsWrapper.addEventListener('click', event => {
+    const getOnlyProperty = Object.keys(event.target.dataset)
+
+    const [ property ] = getOnlyProperty
+    const { 
+        ['edit']: itemEdit, 
+        ['delete']: itemDelete 
+    } = event.target.dataset
+
+    switch(property) {
+        case 'edit':
+            break
+        case 'delete':
+            deleteQuestion(Number(itemDelete))
+            break
+    }
 })
