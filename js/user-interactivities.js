@@ -54,8 +54,6 @@ resultButton.addEventListener('click', () => {
                         points++
                     }else {
                         inputChecked.parentElement.classList.add('incorrect')
-                        const correctAnswerInput = answer.querySelector(`#letter-${correctAnswer}-${index}`)
-                        correctAnswerInput.parentElement.classList.add('correct')
                     }
                 }
             })
@@ -75,14 +73,14 @@ resultButton.addEventListener('click', () => {
             })
         }
 
-        // if(thereAreNotUncheckedItemsExternal) {
-        //     quizDisable = true
-        // }
+        if(thereAreNotUncheckedItemsExternal) {
+            quizDisable = true
+        }
 
-        // setTimeout(() => {
-        //     localStorage.removeItem('checkedItems')
-        //     window.location.reload()
-        // }, 2000)
+        setTimeout(() => {
+            localStorage.removeItem('checkedItems')
+            window.location.reload()
+        }, 2000)
     
         window.scrollTo({ 
             behavior: 'smooth', 
