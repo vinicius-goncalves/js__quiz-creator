@@ -20,6 +20,8 @@ const creatorQuizRadios = document.querySelectorAll('[data-radio="radiocheck"]')
 const modalWrappers = document.querySelectorAll('[data-js="modal-wrapper"]')
 const modalCreatorWrapper = document.querySelector('.modal-create-quiz-wrapper')
 const modalDashboardWrapper = document.querySelector('.modal-dashboard-wrapper')
+
+const modalDashboardContent = document.querySelector('.modal-dashboard-content')
 const modalHeaders = document.querySelectorAll('.modal-header')
 
 const correctAnswerLetter = document.querySelector('.question-creator')
@@ -187,6 +189,14 @@ window.addEventListener('scroll', () => {
 
 //
 
+export const verifyIfTotalQuestionExist = () => {
+    if (!guestManagement.totalQuizCreated) {
+        guestManagement.totalQuizCreated = 1
+    } else {
+        guestManagement.totalQuizCreated = guestManagement.totalQuizCreated + 1
+    }
+}
+
 const pElementEmptyInputs = document.createElement('p')
 createQuizButton.addEventListener('click', () => {
 
@@ -254,6 +264,12 @@ createQuizButton.addEventListener('click', () => {
             },
         }
     
+        verifyIfTotalQuestionExist()
+
+        setSavedItemStringify('guestManagement', guestManagement)
+
+        const savedQuestions = getSavedItemParsed('savedQuestions')
+        
         savedQuestions.push(newQuestion)
         localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
         console.log(JSON.parse(localStorage.getItem('savedQuestions')))
@@ -317,13 +333,12 @@ const callAdminMode = () => {
     if(guestStatus === 'ON') {
         adminButton.textContent = 'Admin Mode: OFF'
         guestManagement.adminMode = 'OFF'
-        
     } else {
         adminButton.textContent = 'Admin Mode: ON'
         guestManagement.adminMode = 'ON'
     }
     
-    localStorage.setItem('guestManagement', JSON.stringify(guestManagement))
+    setSavedItemStringify('guestManagement', guestManagement)
 
     const questionWrapperChildren = [...questionsWrapper.children]
     questionWrapperChildren.forEach(item => {
@@ -365,6 +380,27 @@ const setupNavbar = () => {
 
 }
 
+const divInformationsDashboard = document.createElement('div')
+const invokeDashboardInformations = () => {
+    const guestManagement = getSavedItemParsed('guestManagement')
+    
+    divInformationsDashboard.classList.add('informations')
+    modalDashboardContent.append(divInformationsDashboard)
+
+    const children = [...document.querySelector('.informations').children]
+    children.forEach(item => item.remove())
+
+    const pElement = document.createElement('p')
+    pElement.textContent = `Total questions created: ${guestManagement.totalQuizCreated}`
+    divInformationsDashboard.append(pElement)
+    
+    const pElement2 = document.createElement('p')
+    pElement2.textContent = `Total questions deleted: ${guestManagement.totalQuizDeleted}`
+    divInformationsDashboard.append(pElement2)
+
+    
+}
+
 navbarWrapper.addEventListener('click', event => {
     const { navbar } = event.target.dataset
 
@@ -374,6 +410,7 @@ navbarWrapper.addEventListener('click', event => {
             break
         case 'quiz-dashboard':
             modalDashboardWrapper.classList.add('active')
+            invokeDashboardInformations()
             break
         case 'admin-mode':
             callAdminMode()

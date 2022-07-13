@@ -316,3 +316,9 @@ input[type="text"].correct {
     box-shadow: 20px 20px var(--color6);
     user-select: none;
 }
+
+.modal-dashboard-content p {
+    color: white;
+    font-size: 2rem;
+    margin-left: 25px;
+}
