@@ -36,11 +36,9 @@ export const deleteQuestion = (id) => {
     questionWrapperChildren.forEach(item => {
         item.remove()
     })
-
-    loadQuestions()
 }
 
-export const editQuestion = (id) => {
+export const editQuestion = (id, event) => {
 
     modalEditWrapper.classList.add('active')
 
@@ -61,6 +59,7 @@ export const editQuestion = (id) => {
             const titleInput = document.createElement('input')
             titleInput.setAttribute('type', 'text')
             titleInput.setAttribute('placeholder', title)
+            titleInput.setAttribute('data-temp-edit-title', questionId)
             
             const div = document.createElement('div')
             div.classList.add('modal-edit-answers-wrapper')
@@ -73,54 +72,62 @@ export const editQuestion = (id) => {
             
             answersToArray.forEach((item, index) => {
 
-                const label = document.createElement('label')
-                label.classList.add('temp-edit')
+                const divQuestions = document.createElement('div')
+                divQuestions.classList.add('temp-edit')
                 
                 const input = document.createElement('input')
                 input.setAttribute('type', 'text')
                 input.setAttribute('placeholder', item)
+                input.setAttribute('data-temp-edit-text', questionId)
+
+                const result = item.length > 39 ? item.slice(0, 12) + '...' : item
+
+                input.setAttribute('placeholder', result)
                 input.setAttribute('data-temp-edit', `letter-${letter[index]}-${questionPosition}`)
 
                 const correctInput = document.createElement('input')
                 correctInput.setAttribute('type', 'radio')
-                correctInput.setAttribute('placeholder', item)
                 correctInput.setAttribute('name', 'temp-edit-quiz')
-                
+                correctInput.setAttribute('data-letter', letter[index])
+                correctInput.setAttribute('data-temp-edit-radio', questionId)
 
-                label.append(correctInput)
-                label.append(input)
-                
-                div.appendChild(label)
+                const isCorrectAnswer = correctInput.dataset.letter === correctAnswer
+                if(isCorrectAnswer) {
+                    correctInput.setAttribute('checked', 'true')
+                }
 
-                console.log(correctAnswer)
+                divQuestions.append(correctInput)
+                divQuestions.append(input)
+                div.appendChild(divQuestions)
             })
 
             const h2CorrectAnswer = document.createElement('h2')
             h2CorrectAnswer.textContent = 'Correct Answer'
             div.appendChild(h2CorrectAnswer)
-
-            const buttonsContainer = document.createElement('div')
-            buttonsContainer.classList.add('buttons-container')
             
             const input = document.createElement('input')
             input.setAttribute('type', 'button')
             input.setAttribute('value', 'Edit quiz')
             input.setAttribute('class', 'confirm-edit')
 
-            buttonsContainer.appendChild(input)
+            document.querySelector('.confirm-edit').setAttribute('data-temp-edit-button', questionId)
 
-            modalEditContent.appendChild(buttonsContainer)
             modalEditQuizData.appendChild(div)
         }
     })
-
-    
-
-    
-
-    // const question1 = document.createElement('input')
-    // question1.setAttribute('type', 'text')
-    // question1.setAttribute('placeholder', z.textContent)
-    
-    // modalEditQuizData.appendChild(question1)
 }
+
+modalEditContent.addEventListener('click', event => {
+    if(event.target.classList.contains('confirm-edit')) {
+        const newTitleValue = document.querySelector(`[data-temp-edit-title="${event.target.dataset.tempEditButton}"]`)
+
+        savedQuestions.forEach(question => {
+            const extractValues = Object.values(question)[0]
+            if(extractValues.questionId === Number.parseInt(event.target.dataset.tempEditButton)) {
+                extractValues.title = 'a'
+                // console.log(savedQuestions)
+                setSavedItemStringify('savedQuestions', savedQuestions)
+            }
+        })
+    }
+})

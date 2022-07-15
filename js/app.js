@@ -109,9 +109,6 @@ export const loadQuestions = () => {
             const iElement_trashIcon = document.createElement('i')
             iElement_trashIcon.classList.add('material-icons')
             iElement_trashIcon.textContent = 'delete'
-            // iElement_trashIcon.setAttribute('style', defineElementStyle({ 
-            //     margin: '0 25px'
-            // }))
             iElement_trashIcon.setAttribute('data-delete', questionId)
 
             const iElement_editIcon = document.createElement('i')
@@ -467,7 +464,7 @@ questionsWrapper.addEventListener('click', event => {
 
     switch(property) {
         case 'edit':
-            editQuestion(itemEdit)
+            editQuestion(itemEdit, event)
             break
         case 'delete':
             deleteQuestion(Number(itemDelete))
