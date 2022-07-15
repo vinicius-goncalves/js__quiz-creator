@@ -5,7 +5,7 @@ import {
     getSavedItemParsed,
     verifyIfLocalStorageItemIsNull } from './utils.js'
 
-import { deleteQuestion } from './quiz-tools.js'
+import { deleteQuestion, editQuestion } from './quiz-tools.js'
 
 const scrollbarIndicator = document.querySelector('.scrollbar')
 
@@ -109,9 +109,9 @@ export const loadQuestions = () => {
             const iElement_trashIcon = document.createElement('i')
             iElement_trashIcon.classList.add('material-icons')
             iElement_trashIcon.textContent = 'delete'
-            iElement_trashIcon.setAttribute('style', defineElementStyle({ 
-                margin: '0 25px'
-            }))
+            // iElement_trashIcon.setAttribute('style', defineElementStyle({ 
+            //     margin: '0 25px'
+            // }))
             iElement_trashIcon.setAttribute('data-delete', questionId)
 
             const iElement_editIcon = document.createElement('i')
@@ -152,6 +152,9 @@ export const loadQuestions = () => {
 
             const p = document.createElement('p')
             p.classList.add('answers-p')
+            defineElementProperties(p, {
+                'data-single-answer': `answer-${letters[index]}-${questionPosition}`
+            })
             p.textContent = `${letters[index]}) ${question}`
             label.appendChild(p)
 
@@ -456,6 +459,7 @@ questionsWrapper.addEventListener('click', event => {
     const getOnlyProperty = Object.keys(event.target.dataset)
 
     const [ property ] = getOnlyProperty
+
     const { 
         ['edit']: itemEdit, 
         ['delete']: itemDelete 
@@ -463,6 +467,7 @@ questionsWrapper.addEventListener('click', event => {
 
     switch(property) {
         case 'edit':
+            editQuestion(itemEdit)
             break
         case 'delete':
             deleteQuestion(Number(itemDelete))

@@ -72,22 +72,30 @@ header nav a:hover, header a:hover {
 main {
     color: white;
     margin: 30px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 main section {
-    display: block;
     border: 3px solid var(--color0);
     border-radius: 10px;
     padding: 10px;
     margin: 30px;
+    min-width: 100%;
 }
 
 main section h1 {
     font-size: 2rem;
 }
 
+.edit-items-wrapper {
+    display: flex;
+}
+
 .edit-items-wrapper i {
     cursor: pointer;
+    margin: 10px;
     user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
@@ -113,8 +121,8 @@ main section h1 {
 input[type="radio"] {
     appearance: none;
     border: 2px solid white;
-    width: 16px;
-    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
     border-radius: 50%;
     position: relative;
 }
@@ -133,6 +141,7 @@ input[type="radio"]:checked::before {
 }
 
 .answers-p {
+    display: inline-block;
     font-size: 1.3rem;
 }
 
@@ -158,7 +167,6 @@ input[type="radio"]:checked::before {
     cursor: pointer;
     color: white;
 }
-
 .modal-creator-quiz-buttons-wrapper input {
     background-color: var(--color2);
     color: var(--color5);
@@ -197,7 +205,8 @@ input[type="radio"]:checked::before {
 }
 
 .modal-create-quiz-content i,
-.modal-dashboard-content i {
+.modal-dashboard-content i,
+.modal-edit-content i {
     color: var(--color3);
     font-size: 48px;
     cursor: pointer;
@@ -269,22 +278,14 @@ input[type="radio"]:checked::before {
     margin: 20px;
 }
 
-.answers-label.incorrect {
-    border: 1px solid #ff0000;
+.incorrect {
+    border: 3px solid #b90000;
     border-radius: 10px;
 }
 
-.answers-label.correct {
-    border: 1px solid #15ff00;
+.correct {
+    border: 4px solid #11c900;
     border-radius: 10px;
-}
-
-input[type="text"].incorrect {
-    border: 1px solid #ff0000;
-}
-
-input[type="text"].correct {
-    border: 1px solid #15ff15;
 }
 
 /*
@@ -321,4 +322,125 @@ input[type="text"].correct {
     color: white;
     font-size: 2rem;
     margin-left: 25px;
+}
+
+/*
+    Edit
+*/
+
+.modal-edit-wrapper {
+    display: none;    
+}
+
+.modal-edit-wrapper.active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d0d0d93;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-edit-content {
+    position: absolute;
+    width: 100%;
+    max-width: 79vw;
+    min-height: 79vh;
+    background-color: var(--color0);
+    border-radius: 10px;
+    box-shadow: 20px 20px var(--color6);
+    user-select: none;
+}
+
+
+.modal-edit-content input[type="text"] {  
+    border: none;
+    outline: none;
+    background-color: var(--color3);
+    color: var(--color6);
+    font-size: 1.3rem;
+    text-indent: 5px;
+    border-radius: 4px;
+    padding: 5px;
+    width: 75%;
+}
+
+.modal-edit-answers-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-edit-quiz-data input[type="text"] {
+    margin: 5px 30px;
+}
+
+.modal-edit-quiz-data h2 {
+    color: white;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.modal-edit-wrapper p {
+    color: white;
+    font-size: 2rem;
+    margin-left: 25px;
+}
+
+.modal-edit-wrapper .buttons-container input {
+    margin-top: 25px;
+    background-color: var(--color1);
+}
+
+@media screen and (max-width: 800px) {
+    .questions-wrapper h1 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .questions-wrapper p {
+        font-size: 1.2rem;
+    }
+
+    .questions-wrapper i {
+        font-size: 1.7rem;
+    }
+
+    input[type="radio"] {
+        min-width: 10px;
+        min-height: 10px;
+    }
+    
+    input[type="radio"]:checked::before {
+        width: 5px;
+        height: 5px;
+    }
+
+    .quiz-header-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .answers-label {
+        display: flex;
+        align-items: baseline;
+    }
+}
+
+@media screen and (max-width: 200px) {
+    /* [data-js="quiz-container"] h1 {
+        font-size: .8rem;
+
+    }
+
+    .edit-items-wrapper i {
+        margin: 0;
+        font-size: 1.2rem;
+    } */
 }
