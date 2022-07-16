@@ -9,6 +9,7 @@ const questionsWrapper = document.querySelector('.questions-wrapper')
 const modalEditWrapper = document.querySelector('.modal-edit-wrapper')
 const modalEditContent = document.querySelector('.modal-edit-content')
 const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
+const modalEditAnswersWrapper = document.querySelector('.modal-edit-answers-wrapper')
 
 const savedQuestions = getSavedItemParsed('savedQuestions')
 const guestManagement = getSavedItemParsed('guestManagement')
@@ -120,6 +121,9 @@ export const editQuestion = (id) => {
 }
 
 modalEditContent.addEventListener('click', event => {
+
+    const correctNewAnswer = modalEditQuizData.querySelector('input[type="radio"]:checked')
+
     if(event.target.classList.contains('confirm-edit')) {
         
         const { ['tempEditButton']: id } = event.target.dataset
@@ -141,6 +145,7 @@ modalEditContent.addEventListener('click', event => {
 
                 }
                 
+                extractValues.correctAnswer = correctNewAnswer.dataset.letter
                 setSavedItemStringify('savedQuestions', savedQuestions)
 
             }
