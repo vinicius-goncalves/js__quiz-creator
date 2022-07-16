@@ -1,5 +1,8 @@
 import { loadQuestions } from './app.js'
-import { getSavedItemParsed, setSavedItemStringify } from './utils.js'
+import { 
+    getSavedItemParsed, 
+    setSavedItemStringify,
+    clearHTML } from './utils.js'
 
 const questionsWrapper = document.querySelector('.questions-wrapper')
 
@@ -9,7 +12,6 @@ const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
 
 const savedQuestions = getSavedItemParsed('savedQuestions')
 const guestManagement = getSavedItemParsed('guestManagement')
-
 
 export const deleteQuestion = (id) => {
 
@@ -58,7 +60,7 @@ export const editQuestion = (id) => {
 
             const titleInput = document.createElement('input')
             titleInput.setAttribute('type', 'text')
-            titleInput.setAttribute('placeholder', title)
+            titleInput.setAttribute('value', title)
             titleInput.setAttribute('data-temp-edit-title', questionId)
             
             const div = document.createElement('div')
@@ -77,12 +79,12 @@ export const editQuestion = (id) => {
                 
                 const input = document.createElement('input')
                 input.setAttribute('type', 'text')
-                input.setAttribute('placeholder', item)
-                input.setAttribute('data-temp-edit-text', questionId)
+                input.setAttribute('value', item)
+                input.setAttribute(`data-temp-edit-text-${letter[index]}`, questionId)
 
                 const result = item.length > 39 ? item.slice(0, 12) + '...' : item
 
-                input.setAttribute('placeholder', result)
+                input.setAttribute('value', result)
                 input.setAttribute('data-temp-edit', `letter-${letter[index]}-${questionPosition}`)
 
                 const correctInput = document.createElement('input')
@@ -119,15 +121,33 @@ export const editQuestion = (id) => {
 
 modalEditContent.addEventListener('click', event => {
     if(event.target.classList.contains('confirm-edit')) {
-        const newTitleValue = document.querySelector(`[data-temp-edit-title="${event.target.dataset.tempEditButton}"]`)
+        
+        const { ['tempEditButton']: id } = event.target.dataset
+
+        const newTitleValue = document.querySelector(`[data-temp-edit-title="${id}"]`)
+
+        const letters = ['A', 'B', 'C', 'D']
 
         savedQuestions.forEach(question => {
             const extractValues = Object.values(question)[0]
-            if(extractValues.questionId === Number.parseInt(event.target.dataset.tempEditButton)) {
-                extractValues.title = newTitleValue
-                // console.log(savedQuestions)
+            if(extractValues.questionId === Number.parseInt(id)) {
+
+                extractValues.title = newTitleValue.value
+
+                for(let i = 0; i < letters.length; i++) {
+                    const item = document.querySelector(
+                        `[data-temp-edit-text-${letters[i].toLowerCase()}="${id}"]`)
+                    extractValues.answers[letters[i].toLowerCase()] = item.value
+
+                }
+                
                 setSavedItemStringify('savedQuestions', savedQuestions)
+
             }
         })
+
+        clearHTML(questionsWrapper)
+        loadQuestions()
+        
     }
 })

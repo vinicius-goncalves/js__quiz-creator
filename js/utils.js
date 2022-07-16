@@ -50,3 +50,8 @@ generateLorem.addEventListener('click', () => {
     document.querySelector(`#creator-letter-${randomPosition}`).setAttribute('checked', 'true')
 
 })
+
+export const clearHTML = (elementWrapper) => {
+    const children = [...elementWrapper.children]
+    children.forEach(item => item.remove())
+}
