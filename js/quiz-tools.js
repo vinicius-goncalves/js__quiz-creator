@@ -14,20 +14,18 @@ const guestManagement = getSavedItemParsed('guestManagement')
 export const deleteQuestion = (id) => {
 
     savedQuestions.filter((item, index) => {
-        const objectQuestionKey = Object.keys(item)
-        console.log(item[objectQuestionKey].questionId)
+        const objectQuestionKey = Object.getOwnPropertyNames(item)
         if(item[objectQuestionKey].questionId === id) {
             return savedQuestions.splice(index, 1)
         }
     })
-    
-    if(!guestManagement.totalQuizDeleted) {
-        guestManagement.totalQuizDeleted = 1
-    }else {
-        guestManagement.totalQuizDeleted = guestManagement.totalQuizDeleted + 1
-    }
-    
-    console.log(getSavedItemParsed('savedQuestions'))
+
+    const property = 'totalQuizDeleted'
+    const incrementTotalQuizDeleted = !guestManagement[property]
+        ? guestManagement[property] = 1 
+        : guestManagement[property] + 1
+
+    guestManagement.totalQuizDeleted = incrementTotalQuizDeleted
 
     localStorage.setItem('savedQuestions', JSON.stringify(savedQuestions))
     setSavedItemStringify('guestManagement', guestManagement)
@@ -36,9 +34,11 @@ export const deleteQuestion = (id) => {
     questionWrapperChildren.forEach(item => {
         item.remove()
     })
+
+    loadQuestions()
 }
 
-export const editQuestion = (id, event) => {
+export const editQuestion = (id) => {
 
     modalEditWrapper.classList.add('active')
 
@@ -124,7 +124,7 @@ modalEditContent.addEventListener('click', event => {
         savedQuestions.forEach(question => {
             const extractValues = Object.values(question)[0]
             if(extractValues.questionId === Number.parseInt(event.target.dataset.tempEditButton)) {
-                extractValues.title = 'a'
+                extractValues.title = newTitleValue
                 // console.log(savedQuestions)
                 setSavedItemStringify('savedQuestions', savedQuestions)
             }
