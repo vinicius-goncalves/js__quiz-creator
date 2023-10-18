@@ -1,8 +1,9 @@
 import { loadQuestions } from './app.js'
-import { 
-    getSavedItemParsed, 
+import {
+    getSavedItemParsed,
     setSavedItemStringify,
-    clearHTML } from './utils.js'
+    clearHTML }
+from './features/utils.js'
 
 const questionsWrapper = document.querySelector('.questions-wrapper')
 
@@ -25,7 +26,7 @@ export const deleteQuestion = (id) => {
 
     const property = 'totalQuizDeleted'
     const incrementTotalQuizDeleted = !guestManagement[property]
-        ? guestManagement[property] = 1 
+        ? guestManagement[property] = 1
         : guestManagement[property] + 1
 
     guestManagement.totalQuizDeleted = incrementTotalQuizDeleted
@@ -63,7 +64,7 @@ export const editQuestion = (id) => {
             titleInput.setAttribute('type', 'text')
             titleInput.setAttribute('value', title)
             titleInput.setAttribute('data-temp-edit-title', questionId)
-            
+
             const div = document.createElement('div')
             div.classList.add('modal-edit-answers-wrapper')
 
@@ -72,12 +73,12 @@ export const editQuestion = (id) => {
             div.appendChild(h2)
 
             modalEditQuizData.appendChild(titleInput)
-            
+
             answersToArray.forEach((item, index) => {
 
                 const divQuestions = document.createElement('div')
                 divQuestions.classList.add('temp-edit')
-                
+
                 const input = document.createElement('input')
                 input.setAttribute('type', 'text')
                 input.setAttribute('value', item)
@@ -107,7 +108,7 @@ export const editQuestion = (id) => {
             const h2CorrectAnswer = document.createElement('h2')
             h2CorrectAnswer.textContent = 'Correct Answer'
             div.appendChild(h2CorrectAnswer)
-            
+
             const input = document.createElement('input')
             input.setAttribute('type', 'button')
             input.setAttribute('value', 'Edit quiz')
@@ -125,7 +126,7 @@ modalEditContent.addEventListener('click', event => {
     const correctNewAnswer = modalEditQuizData.querySelector('input[type="radio"]:checked')
 
     if(event.target.classList.contains('confirm-edit')) {
-        
+
         const { ['tempEditButton']: id } = event.target.dataset
 
         const newTitleValue = document.querySelector(`[data-temp-edit-title="${id}"]`)
@@ -144,7 +145,7 @@ modalEditContent.addEventListener('click', event => {
                     extractValues.answers[letters[i].toLowerCase()] = item.value
 
                 }
-                
+
                 extractValues.correctAnswer = correctNewAnswer.dataset.letter
                 setSavedItemStringify('savedQuestions', savedQuestions)
 
@@ -153,6 +154,5 @@ modalEditContent.addEventListener('click', event => {
 
         clearHTML(questionsWrapper)
         loadQuestions()
-        
     }
 })

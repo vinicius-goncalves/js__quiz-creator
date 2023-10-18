@@ -1,9 +1,17 @@
-import { 
-    defineElementProperties, 
+import StorageManager from './features/storage-manager.js'
+
+import questionsJSON from '../assets/jsons/questions.json' assert { type: 'json' }
+import preferencesJSON from '../assets/jsons/preferences.json' assert { type: 'json' }
+
+import {
+    defineElementProperties,
     defineElementStyle,
-    setSavedItemStringify,  
+    setSavedItemStringify,
     getSavedItemParsed,
-    verifyIfLocalStorageItemIsNull } from './utils.js'
+    verifyIfLocalStorageItemIsNull,
+    clearHTML,
+    buildElement,
+    buildIcon } from './features/utils.js'
 
 import { deleteQuestion, editQuestion } from './quiz-tools.js'
 
@@ -26,176 +34,139 @@ const modalHeaders = document.querySelectorAll('.modal-header')
 
 const correctAnswerLetter = document.querySelector('.question-creator')
 
-const savedQuestions = verifyIfLocalStorageItemIsNull('savedQuestions', [], item => JSON.parse(item))
 const guestManagement = verifyIfLocalStorageItemIsNull('guestManagement', {}, item => JSON.parse(item))
 
-const initialQuestion = {
-    1: {
-        title: 'If today is Saturday, what is the date going to be tomorrow?',
-        answers: {
-            a: 'Sunday',
-            b: 'Monday',
-            c: 'Tuesday',
-            d: 'Wednesday'
-        },
-        correctAnswer: 'a',
-        questionId: 1
+const preferences = new StorageManager('preferences')
+const questions = new StorageManager('questions')
+
+async function initializeStorages() {
+
+    const storages = new Map([
+        [ preferences, preferencesJSON ],
+        [ questions, questionsJSON ]
+    ])
+
+    for(const [ storage, json ] of storages) {
+
+        const exists = await storage.exists()
+
+        if(!exists) {
+            storage.set(json)
+        }
     }
 }
 
 window.addEventListener('load', () => {
 
-    if(guestManagement.adminMode === undefined) {
-        guestManagement.adminMode = 'OFF'
-    }
-
+    initializeStorages()
     setupNavbar()
+    loadQuestions()
 
-    if(guestManagement.isCurrent === undefined) {
-        savedQuestions.push(initialQuestion)
-        setSavedItemStringify('savedQuestions', savedQuestions)
-        loadQuestions()
-    }
-
-    guestManagement.isCurrent = true
-    setSavedItemStringify('guestManagement', guestManagement)
-    
 })
 
-export const loadQuestions = () => {
-    
-    const questionsWrapperChildren = [...questionsWrapper.children]
+const loadQuestions = async () => {
 
-    for(let i = 0; i < questionsWrapperChildren.length; i++) {
-        questionsWrapperChildren[0].remove()
-    }
-    
-    if(getSavedItemParsed('savedQuestions') === null) {
-        return
-    }
+    clearHTML(questionsWrapper)
 
-    const questionsValues = JSON.parse(localStorage.getItem('savedQuestions'))
-    const finalResult = questionsValues.map((item, index) => {
-        const extractQuestion = Object.values(item)
-        const { title, answers } = extractQuestion[0]
+    const questionsArr = Object.values(await questions.get())
 
-        const extractQuestionId = Object.getOwnPropertyNames(item)
-        const [ questionId ] = extractQuestionId
+    const renderQuestion = (question, index) => {
 
-        const section = document.createElement('section')
-        section.classList.add(`quiz-${index}`)
-        section.setAttribute('data-js', 'quiz-container')
-        section.setAttribute('data-question', questionId)
-        
-        const divElementQuestionWrapper = document.createElement('div')
-        divElementQuestionWrapper.classList.add('quiz-header-wrapper')
-        divElementQuestionWrapper.setAttribute('style', defineElementStyle({ 
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'space-between'
-        }))
-        
-        section.appendChild(divElementQuestionWrapper)
+        const { ['id']: questionId, title, answers } = question
+        const docFragment = document.createDocumentFragment()
 
-        const h1 = document.createElement('h1')
-        h1.textContent = title
-        divElementQuestionWrapper.appendChild(h1)
+        const questionContainer = buildElement('section')
+            .addClass(`quiz-${index}`)
+            .addAttribute('data-js', 'quiz-container')
+            .addAttribute('data-question', questionId)
+            .build()
+
+        const questionHeader = buildElement('div')
+            .addClass('quiz-header-wrapper')
+            .defineStyle({
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            })
+            .appendOn(questionContainer)
+            .build()
+
+        buildElement('h1')
+            .setText(title)
+            .appendOn(questionHeader)
+            .build()
 
         if(guestManagement.adminMode === 'ON') {
 
-            const divElementEditItemsWrapper = document.createElement('div')
-            divElementEditItemsWrapper.classList.add('edit-items-wrapper')
+            const toolsContainer = buildElement('div')
+                .addClass('edit-items-wrapper')
+                .appendOn(questionHeader)
+                .build()
 
-            const iElement_trashIcon = document.createElement('i')
-            iElement_trashIcon.classList.add('material-icons')
-            iElement_trashIcon.textContent = 'delete'
-            iElement_trashIcon.setAttribute('data-delete', questionId)
+            const tools = ['delete', 'edit']
 
-            const iElement_editIcon = document.createElement('i')
-            iElement_editIcon.classList.add('material-icons')
-            iElement_editIcon.textContent = 'edit'
-            iElement_editIcon.setAttribute('data-edit', questionId)
-
-            divElementEditItemsWrapper.append(iElement_trashIcon, iElement_editIcon)
-            divElementQuestionWrapper.appendChild(divElementEditItemsWrapper)
+            tools.forEach(tool => {
+                buildIcon(tool)
+                    .addAttribute(`data-${tool}`, questionId)
+                    .appendOn(toolsContainer)
+                    .build()
+            })
         }
 
-        const div = document.createElement('div')
-        div.setAttribute('data-answers', 'answers')
-        section.appendChild(div)
+        const div = buildElement('div')
+            .addAttribute('data-answers', answers)
+            .appendOn(questionContainer)
+            .build()
 
-        const letters = Object.getOwnPropertyNames(answers)
-        const questionPosition = index
+        const answersStructure = Object.entries(answers)
+        const questionIndex = index
 
-        const extractAnswers = Object.values(answers)
-        extractAnswers.forEach((question, index) => {
-            const label = document.createElement('label')
-            label.classList.add('answers-label')
-            defineElementProperties(label, {
-                for: `letter-${letters[index]}-${questionPosition}`
-            })
-            div.appendChild(label)
+        answersStructure.forEach(([ letter, answer ], index) => {
 
-            const input = document.createElement('input')
-            defineElementProperties(input, { 
-                type: 'radio',
-                id: `letter-${letters[index]}-${questionPosition}`,
-                name: `quiz-answer-${questionPosition}`,
-                'data-letter': letters[index],
-                // checked: 'true'
-            })
+            const answerLabel = buildElement('label')
+                .addClass('answers-label')
+                .addAttribute('for', `letter-${letter}-${questionIndex}`)
+                .appendOn(div)
+                .build()
 
-            label.append(input)
+            buildElement('input')
+                .setType('radio')
+                .addAttribute('id', `letter-${letter}-${questionIndex}`)
+                .addAttribute('name', `quiz-answer-${questionIndex}`)
+                .appendOn(answerLabel)
+                .build()
 
-            const p = document.createElement('p')
-            p.classList.add('answers-p')
-            defineElementProperties(p, {
-                'data-single-answer': `answer-${letters[index]}-${questionPosition}`
-            })
-            p.textContent = `${letters[index]}) ${question}`
-            label.appendChild(p)
-
-            if(localStorage.getItem('checkedItems') !== null) {
-                const checkedItems = JSON.parse(localStorage.getItem('checkedItems'))
-                const letterMatchWithSavedQuestion = input.dataset.letter === checkedItems[questionPosition]
-                if(letterMatchWithSavedQuestion) {
-                    input.setAttribute('checked', '')
-                }
-            }
+            buildElement('p')
+                .addAttribute('answers-p')
+                .addAttribute('data-single-answer', `answer-${letter}-${questionIndex}`)
+                .setText(`${letter}) ${answer}`)
+                .appendOn(answerLabel)
+                .build()
         })
 
-        return section
-        
-    })
-    
-    finalResult.forEach(item => questionsWrapper.appendChild(item));
-}
-
-loadQuestions()
-
-window.addEventListener('scroll', () => {
-    if(document.documentElement.scrollTop === 0) {
-        document.querySelector('.scrollbar-wrapper').style.display = 'none'
-        return
+        docFragment.appendChild(questionContainer)
+        return docFragment
     }
 
-    document.querySelector('.scrollbar-wrapper').style.display = 'block'
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop || 0
-    const clientHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
-    const percentage = Math.floor((scrollTop / clientHeight) * 100)
-    scrollbarIndicator.style.width = `${percentage}%`
+    const questionRendered = questionsArr.map(renderQuestion)
+    questionsWrapper.append(...questionRendered)
+}
+
+// window.addEventListener('scroll', () => {
+//     if(document.documentElement.scrollTop === 0) {
+//         document.querySelector('.scrollbar-wrapper').style.display = 'none'
+//         return
+//     }
+
+//     document.querySelector('.scrollbar-wrapper').style.display = 'block'
+//     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop || 0
+//     const clientHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
+//     const percentage = Math.floor((scrollTop / clientHeight) * 100)
+//     scrollbarIndicator.style.width = `${percentage}%`
     
-})
+// })
 
 //
-
-export const verifyIfTotalQuestionExist = () => {
-    if (!guestManagement.totalQuizCreated) {
-        guestManagement.totalQuizCreated = 1
-    } else {
-        guestManagement.totalQuizCreated = guestManagement.totalQuizCreated + 1
-    }
-}
 
 const pElementEmptyInputs = document.createElement('p')
 createQuizButton.addEventListener('click', () => {
@@ -398,7 +369,6 @@ const invokeDashboardInformations = () => {
     pElement2.textContent = `Total questions deleted: ${guestManagement.totalQuizDeleted}`
     divInformationsDashboard.append(pElement2)
 
-    
 }
 
 navbarWrapper.addEventListener('click', event => {
@@ -420,6 +390,7 @@ navbarWrapper.addEventListener('click', event => {
 })
 
 let questionsChecked = {}
+
 questionsWrapper.addEventListener('change', () => {
     if(quizDisable) {
         return
@@ -447,7 +418,7 @@ modalHeaders.forEach(modalHeader => {
         if(!closeButton) {
             return
         }
-        
+
         document.querySelector(`.${closeButton}`).classList.remove('active')
     })
 })
@@ -457,9 +428,9 @@ questionsWrapper.addEventListener('click', event => {
 
     const [ property ] = getOnlyProperty
 
-    const { 
-        ['edit']: itemEdit, 
-        ['delete']: itemDelete 
+    const {
+        ['edit']: itemEdit,
+        ['delete']: itemDelete
     } = event.target.dataset
 
     switch(property) {
@@ -471,3 +442,7 @@ questionsWrapper.addEventListener('click', event => {
             break
     }
 })
+
+export {
+    loadQuestions
+}

@@ -1,0 +1,13 @@
+{
+    "1": {
+        "id": 1,
+        "title": "If today is Saturday, what's tomorrow's date?",
+        "answers": {
+            "a": "Friday",
+            "b": "Sunday",
+            "c": "Monday",
+            "d": "Thursday"
+        },
+        "correctAnswer": "b"
+    }
+}
