@@ -42,84 +42,84 @@ export const deleteQuestion = (id) => {
     loadQuestions()
 }
 
-export const editQuestion = (id) => {
+// export const editQuestion = (id) => {
 
-    modalEditWrapper.classList.add('active')
+//     modalEditWrapper.classList.add('active')
 
-    const idToNumber = Number.parseInt(id)
+//     const idToNumber = Number.parseInt(id)
 
-    const modalChildren = [...modalEditQuizData.children]
-    modalChildren.forEach(item => item.remove())
+//     const modalChildren = [...modalEditQuizData.children]
+//     modalChildren.forEach(item => item.remove())
 
-    savedQuestions.forEach((question, index) => {
-        const questionValue = Object.values(question)
-        const { questionId, title, answers, correctAnswer  } = questionValue[0]
-        if(questionId === idToNumber) {
+//     savedQuestions.forEach((question, index) => {
+//         const questionValue = Object.values(question)
+//         const { questionId, title, answers, correctAnswer  } = questionValue[0]
+//         if(questionId === idToNumber) {
 
-            const answersToArray = Object.values(answers)
-            const letter = Object.keys(answers)
-            const questionPosition = index
+//             const answersToArray = Object.values(answers)
+//             const letter = Object.keys(answers)
+//             const questionPosition = index
 
-            const titleInput = document.createElement('input')
-            titleInput.setAttribute('type', 'text')
-            titleInput.setAttribute('value', title)
-            titleInput.setAttribute('data-temp-edit-title', questionId)
+//             const titleInput = document.createElement('input')
+//             titleInput.setAttribute('type', 'text')
+//             titleInput.setAttribute('value', title)
+//             titleInput.setAttribute('data-temp-edit-title', questionId)
 
-            const div = document.createElement('div')
-            div.classList.add('modal-edit-answers-wrapper')
+//             const div = document.createElement('div')
+//             div.classList.add('modal-edit-answers-wrapper')
 
-            const h2 = document.createElement('h2')
-            h2.textContent = 'Answers'
-            div.appendChild(h2)
+//             const h2 = document.createElement('h2')
+//             h2.textContent = 'Answers'
+//             div.appendChild(h2)
 
-            modalEditQuizData.appendChild(titleInput)
+//             modalEditQuizData.appendChild(titleInput)
 
-            answersToArray.forEach((item, index) => {
+//             answersToArray.forEach((item, index) => {
 
-                const divQuestions = document.createElement('div')
-                divQuestions.classList.add('temp-edit')
+//                 const divQuestions = document.createElement('div')
+//                 divQuestions.classList.add('temp-edit')
 
-                const input = document.createElement('input')
-                input.setAttribute('type', 'text')
-                input.setAttribute('value', item)
-                input.setAttribute(`data-temp-edit-text-${letter[index]}`, questionId)
+//                 const input = document.createElement('input')
+//                 input.setAttribute('type', 'text')
+//                 input.setAttribute('value', item)
+//                 input.setAttribute(`data-temp-edit-text-${letter[index]}`, questionId)
 
-                const result = item.length > 39 ? item.slice(0, 12) + '...' : item
+//                 const result = item.length > 39 ? item.slice(0, 12) + '...' : item
 
-                input.setAttribute('value', result)
-                input.setAttribute('data-temp-edit', `letter-${letter[index]}-${questionPosition}`)
+//                 input.setAttribute('value', result)
+//                 input.setAttribute('data-temp-edit', `letter-${letter[index]}-${questionPosition}`)
 
-                const correctInput = document.createElement('input')
-                correctInput.setAttribute('type', 'radio')
-                correctInput.setAttribute('name', 'temp-edit-quiz')
-                correctInput.setAttribute('data-letter', letter[index])
-                correctInput.setAttribute('data-temp-edit-radio', questionId)
+//                 const correctInput = document.createElement('input')
+//                 correctInput.setAttribute('type', 'radio')
+//                 correctInput.setAttribute('name', 'temp-edit-quiz')
+//                 correctInput.setAttribute('data-letter', letter[index])
+//                 correctInput.setAttribute('data-temp-edit-radio', questionId)
 
-                const isCorrectAnswer = correctInput.dataset.letter === correctAnswer
-                if(isCorrectAnswer) {
-                    correctInput.setAttribute('checked', 'true')
-                }
+//                 const isCorrectAnswer = correctInput.dataset.letter === correctAnswer
+//                 if(isCorrectAnswer) {
+//                     correctInput.setAttribute('checked', 'true')
+//                 }
 
-                divQuestions.append(correctInput)
-                divQuestions.append(input)
-                div.appendChild(divQuestions)
-            })
+//                 divQuestions.append(correctInput)
+//                 divQuestions.append(input)
+//                 div.appendChild(divQuestions)
+//             })
 
-            const h2CorrectAnswer = document.createElement('h2')
-            h2CorrectAnswer.textContent = 'Correct Answer'
-            div.appendChild(h2CorrectAnswer)
+//             const h2CorrectAnswer = document.createElement('h2')
+//             h2CorrectAnswer.textContent = 'Correct Answer'
+//             div.appendChild(h2CorrectAnswer)
 
-            const input = document.createElement('input')
-            input.setAttribute('type', 'button')
-            input.setAttribute('value', 'Edit quiz')
-            input.setAttribute('class', 'confirm-edit')
+//             const input = document.createElement('input')
+//             input.setAttribute('type', 'button')
+//             input.setAttribute('value', 'Edit quiz')
+//             input.setAttribute('class', 'confirm-edit')
 
-            document.querySelector('.confirm-edit').setAttribute('data-temp-edit-button', questionId)
+//             document.querySelector('.confirm-edit').setAttribute('data-temp-edit-button', questionId)
 
-            modalEditQuizData.appendChild(div)
-        }
-    })
-}
+//             modalEditQuizData.appendChild(div)
+//         }
+//     })
+// }
 
 modalEditContent.addEventListener('click', event => {
 

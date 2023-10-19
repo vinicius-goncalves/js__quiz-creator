@@ -1,11 +1,9 @@
 import StorageManager from './features/storage-manager.js'
 
-import questionsJSON from '../assets/jsons/questions.json' assert { type: 'json' }
+import questionsJSON from '../assets/jsons/question-example.json' assert { type: 'json' }
 import preferencesJSON from '../assets/jsons/preferences.json' assert { type: 'json' }
 
 import {
-    defineElementProperties,
-    defineElementStyle,
     setSavedItemStringify,
     getSavedItemParsed,
     verifyIfLocalStorageItemIsNull,
@@ -13,7 +11,10 @@ import {
     buildElement,
     buildIcon } from './features/utils.js'
 
-import { deleteQuestion, editQuestion } from './quiz-tools.js'
+import * as AdminMode from './features/admin-mode.js'
+import * as Tools from './features/tools/tools-manager.js'
+
+import { deleteQuestion } from './quiz-tools.js'
 
 const scrollbarIndicator = document.querySelector('.scrollbar')
 
@@ -51,7 +52,7 @@ async function initializeStorages() {
         const exists = await storage.exists()
 
         if(!exists) {
-            storage.set(json)
+            await storage.set(json)
         }
     }
 }
@@ -59,15 +60,16 @@ async function initializeStorages() {
 window.addEventListener('load', () => {
 
     initializeStorages()
-    setupNavbar()
+    updateNavbar()
     loadQuestions()
 
 })
 
-const loadQuestions = async () => {
+async function loadQuestions() {
 
     clearHTML(questionsWrapper)
 
+    const isAdminModeActive = await AdminMode.getStatus()
     const questionsArr = Object.values(await questions.get())
 
     const renderQuestion = (question, index) => {
@@ -96,7 +98,7 @@ const loadQuestions = async () => {
             .appendOn(questionHeader)
             .build()
 
-        if(guestManagement.adminMode === 'ON') {
+        if(isAdminModeActive) {
 
             const toolsContainer = buildElement('div')
                 .addClass('edit-items-wrapper')
@@ -114,7 +116,7 @@ const loadQuestions = async () => {
         }
 
         const div = buildElement('div')
-            .addAttribute('data-answers', answers)
+
             .appendOn(questionContainer)
             .build()
 
@@ -271,8 +273,6 @@ createQuizButton.addEventListener('click', () => {
     }
 })
 
-//
-
 const element = document.createElement('p')
 
 const correctAnswerChangeEvent = (input) => input.addEventListener('change', event => {
@@ -293,89 +293,47 @@ creatorQuizRadios.forEach(input => {
 
 //
 
-const callAdminMode = () => {
-
-    const guestStatus = guestManagement.adminMode === 'ON' 
-        ? 'ON'
-        : 'OFF'
-
-    const adminButton = adminModeWrapper.querySelector('[data-navbar="admin-mode"]')
-        
-    if(guestStatus === 'ON') {
-        adminButton.textContent = 'Admin Mode: OFF'
-        guestManagement.adminMode = 'OFF'
-    } else {
-        adminButton.textContent = 'Admin Mode: ON'
-        guestManagement.adminMode = 'ON'
-    }
-    
-    setSavedItemStringify('guestManagement', guestManagement)
-
-    const questionWrapperChildren = [...questionsWrapper.children]
-    questionWrapperChildren.forEach(item => {
-        item.remove()
-    })
-    loadQuestions()
-}
-
 navbarWrapper.style.display = 'none'
 
-const setupNavbar = () => {
-    
+async function updateNavbar() {
+
     navbarWrapper.style.display = 'flex'
+    AdminMode.loadStatus()
 
-    const actualAdminStatus = (color, status) => 
-        `Admin Mode: <span style="color: ${color}; font-weight: bold;" data-navbar="admin-mode">${status}</span>`
-
-    if(guestManagement.adminMode === 'ON') {
-        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 
-            actualAdminStatus('#15ff00', 'ON')
-    }else {
-        adminModeWrapper.querySelector('[data-status="admin-mode"]').innerHTML = 
-            actualAdminStatus('#ff0000', 'OFF')
-    }
-
-    const { adminMode } = guestManagement
+    const isAdminModeActive = await AdminMode.getStatus()
     const navbarChildren = [...navbarWrapper.children]
-    
-    navbarChildren.forEach(item => {
-        const adminModeOn = item.dataset.status.includes(adminMode === 'ON' ? 'admin-mode-on' : 'ignore')
-        if(adminModeOn) {
-            item.style.display = 'block'
-            return
-        }
-        item.style.display = 'none'
+
+    navbarChildren.forEach(option => {
+        option.style.display = isAdminModeActive ? 'block' : 'none'
     })
+
+    adminModeWrapper.removeAttribute('style')}
+
+// const divInformationsDashboard = document.createElement('div')
+// const invokeDashboardInformations = () => {
+//     const guestManagement = getSavedItemParsed('guestManagement')
     
-    adminModeWrapper.removeAttribute('style')
+//     divInformationsDashboard.classList.add('informations')
+//     modalDashboardContent.append(divInformationsDashboard)
 
-}
+//     const children = [...document.querySelector('.informations').children]
+//     children.forEach(item => item.remove())
 
-const divInformationsDashboard = document.createElement('div')
-const invokeDashboardInformations = () => {
-    const guestManagement = getSavedItemParsed('guestManagement')
+//     const pElement = document.createElement('p')
+//     pElement.textContent = `Total questions created: ${guestManagement.totalQuizCreated}`
+//     divInformationsDashboard.append(pElement)
     
-    divInformationsDashboard.classList.add('informations')
-    modalDashboardContent.append(divInformationsDashboard)
+//     const pElement2 = document.createElement('p')
+//     pElement2.textContent = `Total questions deleted: ${guestManagement.totalQuizDeleted}`
+//     divInformationsDashboard.append(pElement2)
 
-    const children = [...document.querySelector('.informations').children]
-    children.forEach(item => item.remove())
+// }
 
-    const pElement = document.createElement('p')
-    pElement.textContent = `Total questions created: ${guestManagement.totalQuizCreated}`
-    divInformationsDashboard.append(pElement)
-    
-    const pElement2 = document.createElement('p')
-    pElement2.textContent = `Total questions deleted: ${guestManagement.totalQuizDeleted}`
-    divInformationsDashboard.append(pElement2)
-
-}
-
-navbarWrapper.addEventListener('click', event => {
+navbarWrapper.addEventListener('click', async (event) => {
     const { navbar } = event.target.dataset
 
     switch (navbar) {
-        case 'create-new-quiz': 
+        case 'create-new-quiz':
             modalCreatorWrapper.classList.add('active')
             break
         case 'quiz-dashboard':
@@ -383,8 +341,7 @@ navbarWrapper.addEventListener('click', event => {
             invokeDashboardInformations()
             break
         case 'admin-mode':
-            callAdminMode()
-            setupNavbar()
+            AdminMode.toggle().then(updateNavbar)
             break
     }
 })
@@ -400,10 +357,6 @@ questionsWrapper.addEventListener('change', () => {
     inputsCheckedByGuest.forEach((item, index) => questionsChecked[index] = item.dataset.letter)
     setSavedItemStringify('checkedItems', questionsChecked)
 })
-
-// window.addEventListener('beforeunload', event => {
-//     return event.returnValue = 'Do you have sure?'
-// })
 
 modalWrappers.forEach(modalWrapper => {
     modalWrapper.addEventListener('click', event => {
@@ -424,21 +377,22 @@ modalHeaders.forEach(modalHeader => {
 })
 
 questionsWrapper.addEventListener('click', event => {
-    const getOnlyProperty = Object.keys(event.target.dataset)
 
-    const [ property ] = getOnlyProperty
+    const targetClicked = event.target
+    const targetDataset = targetClicked.dataset
 
-    const {
-        ['edit']: itemEdit,
-        ['delete']: itemDelete
-    } = event.target.dataset
+    if(targetClicked.nodeName != 'I') {
+        return
+    }
 
-    switch(property) {
+    const [ action, questionId ] = Object.entries(targetDataset)[0]
+
+    switch(action) {
         case 'edit':
-            editQuestion(itemEdit, event)
+            Tools.edit(questionId)
             break
         case 'delete':
-            deleteQuestion(Number(itemDelete))
+            Tools.remove(questionId)
             break
     }
 })

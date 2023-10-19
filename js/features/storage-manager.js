@@ -11,6 +11,24 @@ function StorageManager(name) {
 
 Object.defineProperties(StorageManager.prototype, {
 
+    getAll: {
+        enumerable: true,
+        value: async function() {
+
+            const key = this.storageContext
+
+            if(!key) {
+                throw new Error('The key (arg0) must not be a  falsy value.')
+            }
+
+            const value = localStorage.getItem(key)
+
+            return new Promise((resolve, reject) => {
+                return value ? resolve(JSON.parse(value)) : resolve(ERROR_REASONS.VALUE_NOT_FOUND)
+            })
+        },
+    },
+
     get: {
         enumerable: true,
         value: async function() {
@@ -24,14 +42,19 @@ Object.defineProperties(StorageManager.prototype, {
             const value = localStorage.getItem(key)
 
             return new Promise((resolve, reject) => {
-                if(value) {
-                    resolve(JSON.parse(value))
-                    return
-                }
-
-                reject(ERROR_REASONS.VALUE_NOT_FOUND)
+                return value
+                    ? resolve(JSON.parse(value))
+                    : reject(ERROR_REASONS.VALUE_NOT_FOUND)
             })
         },
+    },
+
+    getIndex: {
+        enumerable: true,
+        value: async function(questionId) {
+            const allQuestions = await this.getAll()
+            return allQuestions.findIndex(({ id }) => id == questionId)
+        }
     },
 
     exists: {
@@ -39,8 +62,7 @@ Object.defineProperties(StorageManager.prototype, {
         value: async function() {
 
             const key = this.storageContext
-
-            return new Promise(async (resolve, reject) => {
+            return new Promise(async resolve => {
                 try {
                     await this.get(key)
                     resolve(true)

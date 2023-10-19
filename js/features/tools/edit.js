@@ -1,106 +1,90 @@
-// import StorageManager from '../storage-manager.js'
+import StorageManager from '../storage-manager.js'
 
-// import { clearHTML, verifyIfLocalStorageItemIsNull } from '../utils.js'
+import { clearHTML, verifyIfLocalStorageItemIsNull } from '../utils.js'
+import { buildElement, buildIcon } from '../utils.js'
 
-// const modalEditWrapper = document.querySelector('.modal-edit-wrapper')
-// const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
+const modalEditWrapper = document.querySelector('.modal-edit-wrapper')
+const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
 
-// const storageManager = new StorageManager('saved_questions')
-// const storage = storageManager.storageContext
-// const savedQuestions = (await storageManager.get(storage)).data
-// const questionsArr = Object.values(savedQuestions)
+const questions = new StorageManager('questions')
+const allQuestions = await questions.getAll()
 
-// const showModal = () => modalEditWrapper.classList.add('active')
+const showModal = () => modalEditWrapper.classList.add('active')
 
-// function prepareToEdit() {
-//     showModal()
-//     clearHTML(modalEditQuizData)
-// }
+function prepareToEdit() {
+    showModal()
+    clearHTML(modalEditQuizData)
+}
 
-// function findQuestion(questionId) {
+function findQuestion(questionId) {
 
-//     for(const [ index, question ] of questionsArr.entries()) {
-//         if(question.id === questionId) {
-//             return { question, index }
-//         }
-//     }
-// }
+    for(const [ index, question ] of allQuestions.entries()) {
+        if(question.id == questionId) {
+            return { question, index }
+        }
+    }
+}
 
-// function createInput(type, dataset, extraAttrs) {
+function createTempEditModalWith(question, index) {
 
-//     const input = document.createElement('input')
-//     input.type = type
+    const { id, title, answers, correctAnswer } = question
 
-//     for(const key in dataset) {
-//         const value = dataset[key]
-//         input.dataset[key] = value
-//     }
+    const editAnswerModal = buildElement('div')
+        .addClass('modal-edit-answers-wrapper')
+        .build()
 
-//     if(extraAttrs) {
-//         for(const attr in extraAttrs) {
-//             const value = extraAttrs[attr]
-//             input.setAttribute(attr, value)
-//         }
-//     }
+    buildElement('input')
+        .setType('text')
+        .addAttribute('data-temp-edit-title', id)
+        .addAttribute('value', title)
+        .appendOn(modalEditQuizData)
+        .build()
 
-//     return input
-// }
+    buildElement('h2')
+        .setText('Answers')
+        .appendOn(editAnswerModal)
+        .build()
 
-// function createTempEditModalWith(question, index) {
+    const answersArr = Object.entries(answers)
 
-//     const { id, title, answers, correctAnswer } = question
+    answersArr.forEach(([ letter, answer ]) => {
 
-//     const div = document.createElement('div')
-//     div.classList.add('modal-edit-answers-wrapper')
+        const questionContainer = buildElement('div')
+            .addClass('temp-edit')
+            .appendOn(editAnswerModal)
+            .build()
 
-//     const titleInput = createInput('text', { tempEditTitle: id }, {
-//         value: title
-//     })
+       buildElement('input')
+            .setType('radio')
+            .addAttribute('letter', letter)
+            .addAttribute('name', 'temp-edit-quiz')
+            .addAttribute('checked', letter === correctAnswer)
+            .appendOn(questionContainer)
+            .build()
 
-//     const h2 = document.createElement('h2')
-//     h2.textContent = 'Answers'
+        buildElement('input')
+            .setType('text')
+            .addAttribute(`data-temp-edit-text-${letter}`, id)
+            .addAttribute('data-temp-edit', `letter-${letter}-${index}`)
+            .addAttribute('value', answer)
+            .appendOn(questionContainer)
+            .build()
 
-//     modalEditQuizData.appendChild(titleInput)
-//     div.appendChild(h2)
+    })
 
-//     const answersArr = Object.entries(answers)
+    modalEditQuizData.appendChild(editAnswerModal)
+}
 
-//     answersArr.forEach(([ letter, answer ]) => {
+function edit(questionId) {
 
-//         const questionWrapper = document.createElement('div')
-//         questionWrapper.classList.add('temp-edit')
+    if(!questionId) {
+        throw new Error('The id must not be undefined.')
+    }
 
-//         const questionInput = createInput('text', {
-//             [`tempEditText${letter.toUpperCase()}`]: id,
-//             tempEdit: `letter-${letter}-${index}`
-//         }, answer)
+    prepareToEdit()
 
-//         const questionRadioInput = createInput('radio', {
-//             letter,
-//             tempEditRadio: id
-//         }, { name: 'temp-edit-quiz' })
+    const { question, index } = findQuestion(questionId)
+    createTempEditModalWith(question, index)
+}
 
-//         if(letter === correctAnswer) {
-//             questionRadioInput.checked = true
-//         }
-
-//         questionWrapper.append(correctRadioInput, questionInput)
-//         div.appendChild(questionWrapper)
-//     })
-
-//     modalEditQuizData.appendChild(div)
-// }
-
-// function edit(questionId) {
-
-//     if(!questionId || !Number.isInteger(questionId)) {
-//         throw new Error('The id must not be undefined, and must be a integer.')
-//     }
-
-//     prepareToEdit()
-
-//     const { question, index } = findQuestion(questionId)
-//     createTempEditModalWith(question, index)
-// }
-
-// export default edit
+export default edit

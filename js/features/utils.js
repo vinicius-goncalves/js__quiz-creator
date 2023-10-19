@@ -2,23 +2,6 @@ const generateLorem = document.querySelector('[data-button="generate-lorem"]')
 const creatorQuestionTitle = document.querySelector('.creator-question-title')
 const creatorAnswerLetter = letter => document.querySelector(`#creator-answer-${letter}`)
 
-export const defineElementProperties = (element, obj) => {
-    const extractProperties = Object.entries(obj)
-    extractProperties.forEach(([ property, value ]) => {
-        element.setAttribute(property, value)
-    })
-}
-
-export const defineElementStyle = (obj) => {
-    const extractObjectPairs = Object.entries(obj)
-    const removeLastSpace = /[\s]$/g
-    const finalObject = extractObjectPairs.reduce((acc, item) => {
-        acc += `${item[0]}: ${item[1]}; `
-        return acc
-    }, '').replace(removeLastSpace, '')
-    return finalObject
-}
-
 export const setSavedItemStringify = (stringItem, object) => {
     return localStorage.setItem(stringItem, JSON.stringify(object))
 }
