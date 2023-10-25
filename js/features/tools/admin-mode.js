@@ -1,4 +1,4 @@
-import StorageManager from './storage-manager.js'
+import StorageManager from '../storage/storage-manager.js'
 
 const adminModeWrapper = document.querySelector('.admin-mode-wrapper')
 const adminButton = adminModeWrapper.querySelector('[data-navbar="admin-mode"]')
