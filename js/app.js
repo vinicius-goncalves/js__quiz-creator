@@ -15,8 +15,6 @@ import {
 import * as AdminMode from './features/tools/admin-mode.js'
 import * as Tools from './features/tools/tools-manager.js'
 
-const scrollbarIndicator = document.querySelector('.scrollbar')
-
 const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
 const adminModeWrapper = document.querySelector('.admin-mode-wrapper')
 const questionsWrapper = document.querySelector('.questions-wrapper')
@@ -60,20 +58,6 @@ window.addEventListener('load', () => {
     loadQuestions()
 })
 
-// window.addEventListener('scroll', () => {
-//     if(document.documentElement.scrollTop === 0) {
-//         document.querySelector('.scrollbar-wrapper').style.display = 'none'
-//         return
-//     }
-
-//     document.querySelector('.scrollbar-wrapper').style.display = 'block'
-//     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop || 0
-//     const clientHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
-//     const percentage = Math.floor((scrollTop / clientHeight) * 100)
-//     scrollbarIndicator.style.width = `${percentage}%`
-
-// })
-
 //
 
 const pElementEmptyInputs = document.createElement('p')
@@ -89,8 +73,8 @@ const pElementEmptyInputs = document.createElement('p')
 
 //     const answers = [...document.querySelectorAll('[data-creator-answer="creator-answer"]')]
 
-//     const isACorrectInput = (input) => input.value === '' 
-//         ? input.classList.add('incorrect') 
+//     const isACorrectInput = (input) => input.value === ''
+//         ? input.classList.add('incorrect')
 //         : input.classList.remove('incorrect')
 
 //     const inputsIncorrect = textInputs.map(input => {
@@ -216,7 +200,7 @@ async function updateNavbar() {
 // const divInformationsDashboard = document.createElement('div')
 // const invokeDashboardInformations = () => {
 //     const guestManagement = getSavedItemParsed('guestManagement')
-    
+
 //     divInformationsDashboard.classList.add('informations')
 //     modalDashboardContent.append(divInformationsDashboard)
 
@@ -226,7 +210,7 @@ async function updateNavbar() {
 //     const pElement = document.createElement('p')
 //     pElement.textContent = `Total questions created: ${guestManagement.totalQuizCreated}`
 //     divInformationsDashboard.append(pElement)
-    
+
 //     const pElement2 = document.createElement('p')
 //     pElement2.textContent = `Total questions deleted: ${guestManagement.totalQuizDeleted}`
 //     divInformationsDashboard.append(pElement2)

@@ -22,21 +22,6 @@ body {
     background-image: linear-gradient(90deg, var(--color1) 1%, var(--color2) 200%);
 }
 
-.scrollbar-wrapper {
-    width: 100vw;
-    height: 2px;
-    position: fixed;
-    top: 0;
-    background: var(--color5);
-}
-
-.scrollbar {
-    background: var(--color2);
-    height: 2px;
-    position: fixed;
-    top: 0;
-}
-
 header {
     display: flex;
     align-items: center;
@@ -159,7 +144,7 @@ input[type="radio"]:checked::before {
     justify-content: center;
 }
 
-.buttons-container input, 
+.buttons-container input,
 .modal-creator-quiz-buttons-wrapper input {
     width: 100%;
     max-width: 250px;
@@ -177,7 +162,7 @@ input[type="radio"]:checked::before {
     color: var(--color5);
 }
 
-.buttons-container input:active, 
+.buttons-container input:active,
 .modal-creator-quiz-buttons-wrapper input {
     transform: scale(.95)
 }
@@ -268,7 +253,7 @@ input[type="radio"]:checked::before {
     margin: 0;
 }
 
-.question-wrapper div span {
+.question-wrapper div p {
     color: var(--color4);
     font-size: .9rem;
     /* display: flex;
@@ -357,7 +342,7 @@ input[type="text"].invalid {
     Dashboard
 */
 .modal-dashboard-wrapper {
-    display: none;    
+    display: none;
 }
 
 .modal-dashboard-wrapper.active {
@@ -394,7 +379,7 @@ input[type="text"].invalid {
 */
 
 .modal-edit-wrapper {
-    display: none;    
+    display: none;
 }
 
 .modal-edit-wrapper.active {
@@ -420,7 +405,7 @@ input[type="text"].invalid {
     min-height: 79vh;
 }
 
-.modal-edit-content input[type="text"] {  
+.modal-edit-content input[type="text"] {
     border: none;
     outline: none;
     background-color: var(--color3);
@@ -485,7 +470,7 @@ input[type="text"].invalid {
         min-width: 10px;
         min-height: 10px;
     }
-    
+
     input[type="radio"]:checked::before {
         width: 5px;
         height: 5px;
@@ -519,8 +504,8 @@ input[type="text"].invalid {
 
     .modal-edit-wrapper .buttons-container input {
         font-size: 1rem;
-        
-    }   
+
+    }
 
 }
 

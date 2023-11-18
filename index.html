@@ -3,12 +3,15 @@
     <head>
         <title>Quiz</title>
         <link
-            rel="shortcut icon"
+            rel="icon"
             href="assets/favicon.png"
+            sizes="32x32"
             type="image/png">
         <link
             rel="stylesheet"
-            href="css/style.css">
+            href="css/style.css"
+            type="text/css"
+            title="Unique Style">
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -16,10 +19,6 @@
     <body>
 
         <custom-button text="Create"></custom-button>
-
-        <div class="scrollbar-wrapper">
-            <div class="scrollbar"></div>
-        </div>
 
         <header>
             <a href="#">quiz</a>
@@ -42,16 +41,22 @@
             <div class="modal-create-quiz-content">
                 <div class="modal-header">
                     <div>
-                        <h1>Create a new quiz</h1>
-                        <p>It's time to create a new quiz! Let's go there!</p>
+                        <hgroup>
+                            <h1>Create a new quiz</h1>
+                            <p>It's time to create a new quiz! Let's go there!</p>
+                        </hgroup>
                     </div>
                     <i class="material-icons close" data-close="modal-create-quiz-wrapper">close</i>
                 </div>
                 <div class="question-creator">
                     <div class="question-wrapper">
                         <div class="title">
-                            <h2>Quiz title</h2>
-                            <span>This is the quiz's title. Example: <q>When "const" keyword was implement in JavaScript?</q></span>
+                            <hgroup>
+                                <h2>Quiz title</h2>
+                                <p>
+                                    This is the quiz's title. Example: <q>When "const" keyword was implement in JavaScript?</q>
+                                </p>
+                            </hgroup>
                         </div>
                         <input
                             data-new-quiz="title"
@@ -63,8 +68,10 @@
                     <div class="answers">
                         <div class="question-wrapper">
                             <div class="title">
-                                <h2>Answers</h2>
-                                <span>Define the quiz answers - the checked radio means that one is going to be the correct answer.</span>
+                                <hgroup>
+                                    <h2>Answers</h2>
+                                    <p>Define the quiz's answers - the checked radio means that one is going to be the correct answer.</p>
+                                </hgroup>
                             </div>
                             <div class="new-answers-wrapper">
                                 <label data-new-quiz="wrapper" class="new-answer-wrapper">
