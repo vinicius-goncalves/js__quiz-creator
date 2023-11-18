@@ -20,7 +20,7 @@ async function loadQuestions() {
         const quizContainer = buildElement('div')
             .addAttribute('data-quiz', `container-${quizId}`)
             .addAttribute('data-quiz-index', quizIndex)
-            .setEvent('mouseleave', popup.deleteAll)
+            .setEvent('mouseleave', (event) => !event.toElement?.matches('[data-tools-popup]') ? popup.deleteAll() : undefined)
             .build()
 
         const quizHeader = buildElement('header')
