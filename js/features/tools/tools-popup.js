@@ -36,6 +36,7 @@ const popup = {
 
         const popupContent = buildElement('div')
             .addAttribute('data-tools-popup', 'content')
+            .setEvent('mouseleave', this.deleteAll)
             .appendOn(popupContainer)
             .build()
 
@@ -102,3 +103,5 @@ mainQuestions.addEventListener('click', handleWithPopups)
 
 const deletePopupsWhen = ['resize', 'click']
 deletePopupsWhen.forEach(evtName => window.addEventListener(evtName, popup.deleteAll))
+
+export default popup

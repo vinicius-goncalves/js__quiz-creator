@@ -89,6 +89,7 @@ main [data-quiz="header"] {
 
 [data-quiz-header="texts"] [data-quiz-header-texts="id"] {
     color: var(--color4);
+    font-size: .7rem;
 }
 
 [data-quiz="tools"] .tools-icon {

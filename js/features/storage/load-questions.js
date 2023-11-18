@@ -1,6 +1,7 @@
 import StorageManager from './storage-manager.js'
 
 import { buildElement, buildIcon, clearHTML } from '../utils.js'
+import popup from '../tools/tools-popup.js'
 
 const questions = new StorageManager('questions')
 const questionsWrapper = document.querySelector('.questions-wrapper')
@@ -19,6 +20,7 @@ async function loadQuestions() {
         const quizContainer = buildElement('div')
             .addAttribute('data-quiz', `container-${quizId}`)
             .addAttribute('data-quiz-index', quizIndex)
+            .setEvent('mouseleave', popup.deleteAll)
             .build()
 
         const quizHeader = buildElement('header')

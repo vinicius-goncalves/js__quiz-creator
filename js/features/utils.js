@@ -97,6 +97,13 @@ function buildElement(element) {
             return this
         },
 
+        setEvent: function setEvent(evtName, evtCallback) {
+
+            newElement.addEventListener(evtName, evtCallback)
+            return this
+
+        },
+
         appendOn: function appendOn(element) {
 
             element.appendChild(newElement)
