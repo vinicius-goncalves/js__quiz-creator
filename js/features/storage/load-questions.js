@@ -1,7 +1,6 @@
 import StorageManager from './storage-manager.js'
 
-import { clearHTML, buildElement, buildIcon } from '../utils.js'
-import * as AdminMode from '../tools/admin-mode.js'
+import { buildElement, buildIcon, clearHTML } from '../utils.js'
 
 const questions = new StorageManager('questions')
 const questionsWrapper = document.querySelector('.questions-wrapper')
@@ -10,7 +9,6 @@ async function loadQuestions() {
 
     clearHTML(questionsWrapper)
 
-    const isAdminModeActive = await AdminMode.getStatus()
     const questionsArr = Object.values(await questions.get())
 
     const renderQuestion = (quiz, quizIndex) => {
@@ -19,9 +17,8 @@ async function loadQuestions() {
         const docFragment = document.createDocumentFragment()
 
         const quizContainer = buildElement('div')
-            .addAttribute('data-quiz', 'container')
+            .addAttribute('data-quiz', `container-${quizId}`)
             .addAttribute('data-quiz-index', quizIndex)
-            .addAttribute('data-quiz-id', quizId)
             .build()
 
         const quizHeader = buildElement('header')
@@ -46,22 +43,16 @@ async function loadQuestions() {
             .setText(`This question's id is: #${quizId}`)
             .build()
 
-        if(isAdminModeActive) {
+        const toolsContainer = buildElement('div')
+            .addAttribute('data-quiz-context-id', `${quizId}`)
+            .addAttribute('data-quiz', 'tools')
+            .appendOn(quizHeader)
+            .build()
 
-            const toolsContainer = buildElement('div')
-                .addClass('edit-items-wrapper')
-                .appendOn(quizHeader)
-                .build()
-
-            const tools = ['delete', 'edit']
-
-            tools.forEach(tool => {
-                buildIcon(tool)
-                    .addAttribute(`data-${tool}`, quizId)
-                    .appendOn(toolsContainer)
-                    .build()
-            })
-        }
+        buildIcon('more_horiz')
+            .addClass('tools-icon')
+            .appendOn(toolsContainer)
+            .build()
 
         const div = buildElement('div')
             .addAttribute('data-quiz', 'answers')

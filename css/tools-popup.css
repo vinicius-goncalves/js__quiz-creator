@@ -1,0 +1,40 @@
+[data-tools-popup|="container"] {
+    background-color: var(--color2);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 5px;
+    overflow: hidden;
+    border: .1px solid var(--color3);
+}
+
+[data-tools-popup="tools"] {
+    list-style-type: none;
+    cursor: pointer;
+}
+
+[data-tools-popup="tool"] * {
+    color: var(--color5);
+}
+
+[data-tools-popup="tool"] {
+    padding: 8px 15px;
+    margin: auto;
+}
+
+[data-tools-popup="tool"]:hover {
+    background-color: var(--color1);
+}
+
+[data-tools-popup="tool"] button {
+    display: flex;
+    align-items: center;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: none;
+}
+
+[data-tools-popup="tool"] .tool-icon {
+    margin: 0 5px;
+}

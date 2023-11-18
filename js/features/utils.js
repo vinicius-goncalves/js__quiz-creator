@@ -104,6 +104,13 @@ function buildElement(element) {
 
         },
 
+        prependOn: function prependOn(element) {
+
+            element.prepend(newElement)
+            return this
+
+        },
+
         build: function(debug) {
 
             if(debug) {
@@ -142,8 +149,13 @@ function clearHTML(container) {
     }
 }
 
+function randomID() {
+    return Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER >>> 6)).toString(16)
+}
+
 export {
     buildElement,
     buildIcon,
-    clearHTML
+    clearHTML,
+    randomID
 }

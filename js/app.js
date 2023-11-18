@@ -1,3 +1,4 @@
+import('./features/tools/tools-popup.js')
 import('./components/elements/CustomButton.js')
 
 import StorageManager from './features/storage/storage-manager.js'
@@ -12,7 +13,6 @@ import {
     getSavedItemParsed,
     verifyIfLocalStorageItemIsNull } from './features/utils.js'
 
-import * as AdminMode from './features/tools/admin-mode.js'
 import * as Tools from './features/tools/tools-manager.js'
 
 const navbarWrapper = document.querySelector('[data-navbar="navbar"]')
@@ -54,7 +54,6 @@ async function initializeStorages() {
 
 window.addEventListener('load', () => {
     initializeStorages()
-    updateNavbar()
     loadQuestions()
 })
 
@@ -181,22 +180,6 @@ creatorQuizRadios.forEach(input => {
 
 //
 
-navbarWrapper.style.display = 'none'
-
-async function updateNavbar() {
-
-    navbarWrapper.style.display = 'flex'
-    AdminMode.loadStatus()
-
-    const isAdminModeActive = await AdminMode.getStatus()
-    const navbarChildren = [...navbarWrapper.children]
-
-    navbarChildren.forEach(option => {
-        option.style.display = isAdminModeActive ? 'block' : 'none'
-    })
-
-    adminModeWrapper.removeAttribute('style')}
-
 // const divInformationsDashboard = document.createElement('div')
 // const invokeDashboardInformations = () => {
 //     const guestManagement = getSavedItemParsed('guestManagement')
@@ -223,13 +206,6 @@ navbarWrapper.addEventListener('click', async (event) => {
     switch (navbar) {
         case 'create-new-quiz':
             modalCreatorWrapper.classList.add('active')
-            break
-        case 'quiz-dashboard':
-            modalDashboardWrapper.classList.add('active')
-            invokeDashboardInformations()
-            break
-        case 'admin-mode':
-            AdminMode.toggle().then(updateNavbar)
             break
     }
 })
@@ -264,26 +240,26 @@ modalHeaders.forEach(modalHeader => {
     })
 })
 
-questionsWrapper.addEventListener('click', event => {
+// questionsWrapper.addEventListener('click', event => {
 
-    const targetClicked = event.target
-    const targetDataset = targetClicked.dataset
+//     const targetClicked = event.target
+//     const targetDataset = targetClicked.dataset
 
-    if(targetClicked.nodeName != 'I') {
-        return
-    }
+//     if(targetClicked.nodeName != 'I') {
+//         return
+//     }
 
-    const [ action, questionId ] = Object.entries(targetDataset)[0]
+//     const [ action, questionId ] = Object.entries(targetDataset)[0]
 
-    switch(action) {
-        case 'edit':
-            Tools.edit(questionId)
-            break
-        case 'delete':
-            Tools.remove(questionId)
-            break
-    }
-})
+//     switch(action) {
+//         case 'edit':
+//             Tools.edit(questionId)
+//             break
+//         case 'delete':
+//             Tools.remove(questionId)
+//             break
+//     }
+// })
 
 export {
     loadQuestions
