@@ -1,4 +1,4 @@
-const styleRef = '/js/features/components/styles/custom-button.css'
+const styleRef = '/js/components/styles/custom-button.css'
 
 class CustomButton extends HTMLElement {
     constructor() {

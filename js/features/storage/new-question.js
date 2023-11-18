@@ -1,4 +1,4 @@
-import Question from '../classes/Question.js'
+// import Question from '../classes/Question.js'
 
 const createQuizWrapper = document
     .querySelector('[data-modal="create-quiz-wrapper"]')
@@ -101,18 +101,19 @@ function createNewQuiz() {
         id,
         title,
         answers,
-        correctAnswer,
-        [Symbol.iterator]: function* () {
-            for(const key in question) {
-                if(question.hasOwnProperty(key)) {
-                    yield question[key]
-                }
-            }
-        }
+        correctAnswer
+        // correctAnswer,
+        // [Symbol.iterator]: function* () {
+        //     for(const key in question) {
+        //         if(question.hasOwnProperty(key)) {
+        //             yield question[key]
+        //         }
+        //     }
+        // }
     }
 
-    const newQuestion = new Question(...question)
-    console.log(newQuestion)
+    // const newQuestion = new Question(...question)
+    // console.log(newQuestion)
 
 }
 

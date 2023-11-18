@@ -1,4 +1,4 @@
-import('./features/components/elements/CustomButton.js')
+import('./components/elements/CustomButton.js')
 
 import StorageManager from './features/storage/storage-manager.js'
 
@@ -60,7 +60,7 @@ window.addEventListener('load', () => {
 
 //
 
-const pElementEmptyInputs = document.createElement('p')
+// const pElementEmptyInputs = document.createElement('p')
 // createQuizButton.addEventListener('click', () => {
 
 //     const questionCreatorWrapperChildren = [...questionCreatorWrapper.children]

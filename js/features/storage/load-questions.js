@@ -13,81 +13,87 @@ async function loadQuestions() {
     const isAdminModeActive = await AdminMode.getStatus()
     const questionsArr = Object.values(await questions.get())
 
-    const renderQuestion = (question, index) => {
+    const renderQuestion = (quiz, quizIndex) => {
 
-        const { ['id']: questionId, title, answers } = question
+        const { ['id']: quizId, title, answers } = quiz
         const docFragment = document.createDocumentFragment()
 
-        const questionContainer = buildElement('section')
-            .addClass(`quiz-${index}`)
-            .addAttribute('data-js', 'quiz-container')
-            .addAttribute('data-question', questionId)
+        const quizContainer = buildElement('div')
+            .addAttribute('data-quiz', 'container')
+            .addAttribute('data-quiz-index', quizIndex)
+            .addAttribute('data-quiz-id', quizId)
             .build()
 
-        const questionHeader = buildElement('div')
-            .addClass('quiz-header-wrapper')
-            .defineStyle({
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-            })
-            .appendOn(questionContainer)
+        const quizHeader = buildElement('header')
+            .addAttribute('data-quiz', 'header')
+            .appendOn(quizContainer)
             .build()
 
-        buildElement('h1')
+        const quizHeaderTexts = buildElement('div')
+            .addAttribute('data-quiz-header', 'texts')
+            .appendOn(quizHeader)
+            .build()
+
+        buildElement('h2')
+            .addAttribute('data-quiz-header-texts', 'title')
             .setText(title)
-            .appendOn(questionHeader)
+            .appendOn(quizHeaderTexts)
+            .build()
+
+        buildElement('small')
+            .addAttribute('data-quiz-header-texts', 'id')
+            .appendOn(quizHeaderTexts)
+            .setText(`This question's id is: #${quizId}`)
             .build()
 
         if(isAdminModeActive) {
 
             const toolsContainer = buildElement('div')
                 .addClass('edit-items-wrapper')
-                .appendOn(questionHeader)
+                .appendOn(quizHeader)
                 .build()
 
             const tools = ['delete', 'edit']
 
             tools.forEach(tool => {
                 buildIcon(tool)
-                    .addAttribute(`data-${tool}`, questionId)
+                    .addAttribute(`data-${tool}`, quizId)
                     .appendOn(toolsContainer)
                     .build()
             })
         }
 
         const div = buildElement('div')
-
-            .appendOn(questionContainer)
+            .addAttribute('data-quiz', 'answers')
+            .appendOn(quizContainer)
             .build()
 
         const answersStructure = Object.entries(answers)
-        const questionIndex = index
 
-        answersStructure.forEach(([ letter, answer ], index) => {
+        answersStructure.forEach(([ letter, answer ]) => {
 
             const answerLabel = buildElement('label')
                 .addClass('answers-label')
-                .addAttribute('for', `letter-${letter}-${questionIndex}`)
+                .addAttribute('for', `letter-${letter}-${quizIndex}`)
                 .appendOn(div)
                 .build()
 
             buildElement('input')
                 .setType('radio')
-                .addAttribute('id', `letter-${letter}-${questionIndex}`)
-                .addAttribute('name', `quiz-answer-${questionIndex}`)
+                .addAttribute('id', `letter-${letter}-${quizIndex}`)
+                .addAttribute('name', `quiz-answer-${quizIndex}`)
                 .appendOn(answerLabel)
                 .build()
 
             buildElement('p')
                 .addAttribute('answers-p')
-                .addAttribute('data-single-answer', `answer-${letter}-${questionIndex}`)
+                .addAttribute('data-single-answer', `answer-${letter}-${quizIndex}`)
                 .setText(`${letter}) ${answer}`)
                 .appendOn(answerLabel)
                 .build()
         })
 
-        docFragment.appendChild(questionContainer)
+        docFragment.appendChild(quizContainer)
         return docFragment
     }
 

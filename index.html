@@ -11,20 +11,19 @@
             rel="stylesheet"
             href="css/style.css"
             type="text/css"
-            title="Unique Style">
+            title="Unique Style"
+            referrerpolicy="no-referrer-when-downgrade">
         <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/icon?family=Material+Icons">
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            referrerpolicy="no-referrer-when-downgrade">
     </head>
     <body>
 
-        <custom-button text="Create"></custom-button>
-
-        <header>
-            <a href="#">quiz</a>
+        <header class="main-header">
+            <h1 href="#">quiz</h1>
             <nav data-navbar="navbar">
                 <a href="#" data-navbar="create-new-quiz" data-status="admin-mode-on">Create a quiz</a>
-                <a href="#" data-navbar="quiz-dashboard" data-status="admin-mode-on">Dashboard</a>
                 <div class="admin-mode-wrapper" data-status="ignore">
                     <a href="#" data-navbar="admin-mode" data-status="admin-mode"></a>
                 </div>
@@ -37,8 +36,8 @@
             <input type="button" value="See result" class="see-result">
         </div>
         <!-- Modal for create a quiz -->
-        <div data-modal="create-quiz-wrapper" class="modal-create-quiz-wrapper" data-js="modal-wrapper">
-            <div class="modal-create-quiz-content">
+        <div data-modal="create-quiz-wrapper" class="modal-create-quiz-wrapper" data-js="modal-wrapper" style="display: none;">
+            <div data-modal="create-quiz-content">
                 <div class="modal-header">
                     <div>
                         <hgroup>
@@ -46,7 +45,7 @@
                             <p>It's time to create a new quiz! Let's go there!</p>
                         </hgroup>
                     </div>
-                    <i class="material-icons close" data-close="modal-create-quiz-wrapper">close</i>
+                    <i class="material-icons close" data-close="create-quiz-wrapper">close</i>
                 </div>
                 <div class="question-creator">
                     <div class="question-wrapper">
@@ -178,10 +177,11 @@
             </div>
         </div> -->
 
-        <script src="js/app.js" type="module"></script>
+        <script src="/js/app.js" type="module"></script>
         <script src="js/user-interactivities.js" type="module"></script>
         <script src="js/features/tools/remove.js" type="module"></script>
         <script src="js/features/storage/new-question.js" type="module"></script>
+        <script src="js/wrappers-control.js"></script>
 
     </body>
 </html>
