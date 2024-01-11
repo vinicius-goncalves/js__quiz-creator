@@ -1,18 +1,24 @@
-# Quiz Answers and Creations
+# Quiz Creator
 
-Crie suas próprias questões com este gerador de quiz :bulb:
+Build your own quizes questions with this project.
 
-## Linguagens utilizadas
-- HTML e CSS
-- Javascript
+<div align="center">
+    <img src="https://img.shields.io/badge/HTML%205-323330?style=for-the-badge&logo=html5" alt="html5 logo">
+    <img src="https://img.shields.io/badge/CSS3-323330?style=for-the-badge&logo=css3&logoColor=007ACC" alt="css3 logo">
+    <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E" alt="js logo">
+</div>
 
-## Descrição do projeto
-A aplicação consite em um criador de perguntas e respostas, onde há intuições via menu gráfico que o usuário poderá criar uma nova questão. As questões geradas são salvas no ```localStorage``` do navegador.
+## Introduction
+The focus of this project was the study of JavaScript Storage APIs, in this case, [`localStorage`][localStorage] API. It is expected to be migrated from `localStorage` API to `IndexedDB` API, in a future version.
 
-## Instalação
-Não é necessário instalar módulos ou nenhuma ferramenta/serviço externo.
+While using this project, you can build your own quiz questions with tools such as `edit`, `delete`, `create` and more.
 
-## Demostração
-Para uma demostração, acesse o site abaixo. :smile:
+## Installation
+This project does not require any external modules or libraries.
 
-- [quiz-answers-and-creations](https://vinicius-goncalves.github.io/quiz-answers-and-creations/) - Demostração
+## Try it out
+If you want to check the demo of this project, check it out by this [link](https://vinicius-goncalves.github.io/quiz-answers-and-creations/).
+
+[comment]: # (links)
+[localStorage]: <https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage> "localStorage"
+[comment]: # (links)
