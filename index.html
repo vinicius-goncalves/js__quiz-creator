@@ -1,94 +1,174 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>quiz</title>
-        <link rel="shortcut icon" href="images/favicon-32x32.png">
-        <link rel="stylesheet" href="css/style.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+        <title>Quiz</title>
+        <link
+            rel="alternative stylesheet"
+            href="./css/tools-popup.css"
+            type="text/css">
+        <link
+            rel="icon"
+            href="assets/favicon.png"
+            sizes="32x32"
+            type="image/png">
+        <link
+            rel="stylesheet"
+            href="css/style.css"
+            type="text/css"
+            title="Unique Style"
+            referrerpolicy="no-referrer-when-downgrade">
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            referrerpolicy="no-referrer-when-downgrade">
     </head>
     <body>
 
-        <div class="scrollbar-wrapper">
-            <div class="scrollbar"></div>
-        </div>
-
-        <header>
-            <a href="#">quiz</a>
+        <header class="main-header">
+            <h1 href="#">quiz</h1>
             <nav data-navbar="navbar">
                 <a href="#" data-navbar="create-new-quiz" data-status="admin-mode-on">Create a quiz</a>
-                <a href="#" data-navbar="quiz-dashboard" data-status="admin-mode-on">Dashboard</a>
                 <div class="admin-mode-wrapper" data-status="ignore">
-                    <a href="#" data-navbar="admin-mode" data-status="admin-mode">Admin Mode</a>
+                    <a href="#" data-navbar="admin-mode" data-status="admin-mode"></a>
                 </div>
             </nav>
         </header>
-        
+
         <main class="questions-wrapper"></main>
         <p class="result"></p>
         <div class="buttons-container">
             <input type="button" value="See result" class="see-result">
         </div>
         <!-- Modal for create a quiz -->
-        <div class="modal-create-quiz-wrapper" data-js="modal-wrapper">
-            <div class="modal-create-quiz-content">
+        <div data-modal="create-quiz-wrapper" class="modal-create-quiz-wrapper" data-js="modal-wrapper" style="display: none;">
+            <div data-modal="create-quiz-content">
                 <div class="modal-header">
-                    <h1>quiz Creator</h1>
-                    <i class="material-icons close" data-close="modal-create-quiz-wrapper">close</i>
+                    <div>
+                        <hgroup>
+                            <h1>Create a new quiz</h1>
+                            <p>It's time to create a new quiz! Let's go there!</p>
+                        </hgroup>
+                    </div>
+                    <i class="material-icons close" data-close="create-quiz-wrapper">close</i>
                 </div>
                 <div class="question-creator">
                     <div class="question-wrapper">
-                        <h2>Title</h2>
-                        <input type="text" class="creator-question-title">
-                    </div>
-                    <div class="question-wrapper">
-                        <h2>Answer (A)</h2>
-                        <div class="creator-answers-div input-wrapper" for="creator-letter-a">
-                            <input type="radio" id="creator-letter-a" name="creator-quiz-answer" data-letter="a" data-radio="radiocheck" tabindex="-1">
-                            <input type="text" id="creator-answer-a" name="creator-answer-a" data-creator-answer="creator-answer" data-letter="a">
+                        <div class="title">
+                            <hgroup>
+                                <h2>Quiz title</h2>
+                                <p>
+                                    This is the quiz's title. Example: <q>When "const" keyword was implement in JavaScript?</q>
+                                </p>
+                            </hgroup>
                         </div>
+                        <input
+                            data-new-quiz="title"
+                            type="text"
+                            class="creator-question-title"
+                            spellcheck="false"
+                            translate="no">
                     </div>
-                   <div class="question-wrapper">
-                    <h2>Answer (B)</h2>
-                    <div class="creator-answers-div input-wrapper input-wrapper" for="creator-letter-b">
-                        <input type="radio" id="creator-letter-b" name="creator-quiz-answer" 
-                        data-letter="b" data-radio="radiocheck" tabindex="-1">
-                        <input type="text" id="creator-answer-b" name="creator-answer-b" data-creator-answer="creator-answer" data-letter="b">
-                    </div>
-                   </div>
-                    <div class="question-wrapper">
-                        <h2>Answer (C)</h2>
-                        <div class="creator-answers-div input-wrapper" for="creator-letter-c">
-                            <input type="radio" id="creator-letter-c" name="creator-quiz-answer" data-letter="c" data-radio="radiocheck" tabindex="-1">
-                            <input type="text" id="creator-answer-c" name="creator-answer-c" data-creator-answer="creator-answer" data-letter="c">
+                    <div class="answers">
+                        <div class="question-wrapper">
+                            <div class="title">
+                                <hgroup>
+                                    <h2>Answers</h2>
+                                    <p>Define the quiz's answers - the checked radio means that one is going to be the correct answer.</p>
+                                </hgroup>
+                            </div>
+                            <div class="new-answers-wrapper">
+                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                    <span>
+                                        a&rpar;
+                                    </span>
+                                    <input
+                                        name="answer-wrapper"
+                                        type="radio"
+                                        id="creator-letter-a"
+                                        data-radio="radiocheck"
+                                        tabindex="-1">
+                                    <input
+                                        type="text"
+                                        id="creator-answer-a"
+                                        data-creator-answer="creator-answer"
+                                        data-letter="a">
+                                </label>
+                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                    <span>
+                                        b&rpar;
+                                    </span>
+                                    <input
+                                        name="answer-wrapper"
+                                        type="radio"
+                                        id="creator-letter-b"
+                                        data-radio="radiocheck"
+                                        tabindex="-1">
+                                    <input
+                                        type="text"
+                                        id="creator-answer-b"
+                                        data-creator-answer="creator-answer"
+                                        data-letter="b">
+                                </label>
+                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                    <span>
+                                        c&rpar;
+                                    </span>
+                                    <input
+                                        name="answer-wrapper"
+                                        type="radio"
+                                        id="creator-letter-c"
+                                        data-radio="radiocheck"
+                                        tabindex="-1">
+                                    <input
+                                        type="text"
+                                        id="creator-answer-c"
+                                        data-creator-answer="creator-answer"
+                                        data-letter="c">
+                                </label>
+                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                    <span>
+                                        d&rpar;
+                                    </span>
+                                    <input
+                                        name="answer-wrapper"
+                                        type="radio"
+                                        id="creator-letter-d"
+                                        data-radio="radiocheck"
+                                        tabindex="-1">
+                                    <input
+                                        type="text"
+                                        id="creator-answer-d"
+                                        data-creator-answer="creator-answer"
+                                        data-letter="d">
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="question-wrapper">
-                        <h2>Answer (D)</h2>
-                        <div class="creator-answers-div input-wrapper" for="creator-letter-d">
-                            <input type="radio" id="creator-letter-d" name="creator-quiz-answer" data-letter="d" data-radio="radiocheck" tabindex="-1">
-                            <input type="text" id="creator-answer-d" name="creator-answer-d" data-creator-answer="creator-answer" data-letter="d">
-                        </div>
+                        <p class="new-quiz-info"></p>
                     </div>
                 </div>
                 <div class="modal-creator-quiz-buttons-wrapper">
-                    <input type="button" value="Generate Lorem" data-button="generate-lorem">
-                    <input type="button" value="Create quiz" data-button="create-quiz">
+                    <custom-button
+                        text="Random Text"
+                        data-button="generate-lorem"></custom-button>
+                    <custom-button
+                        text="Create"
+                        data-button="create-quiz"></custom-button>
                 </div>
             </div>
         </div>
+
         <!-- Modal for dashboard -->
-        <div class="modal-dashboard-wrapper" data-js="modal-wrapper">
+        <!-- <div class="modal-dashboard-wrapper" data-js="modal-wrapper">
             <div class="modal-dashboard-content">
                 <div class="modal-header">
                     <h1>quiz Dashboard</h1>
                     <i class="material-icons close" data-close="modal-dashboard-wrapper">close</i>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Modal for edit content -->
-        <div class="modal-edit-wrapper" data-js="modal-wrapper">
+        <!-- <div class="modal-edit-wrapper" data-js="modal-wrapper">
             <div class="modal-edit-content">
                 <div class="modal-header">
                     <h1>quiz Edit Question</h1>
@@ -99,8 +179,13 @@
                     <input type="button" value="Edit quiz" class="confirm-edit">
                 </div>
             </div>
-        </div>
-    <script src="js/app.js" type="module"></script>
-    <script src="js/user-interactivities.js"></script>
+        </div> -->
+
+        <script src="/js/app.js" type="module"></script>
+        <script src="js/user-interactivities.js" type="module"></script>
+        <script src="js/features/tools/remove.js" type="module"></script>
+        <script src="js/features/storage/new-question.js" type="module"></script>
+        <script src="js/wrappers-control.js"></script>
+
     </body>
 </html>
