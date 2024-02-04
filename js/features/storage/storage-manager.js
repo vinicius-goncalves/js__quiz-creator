@@ -6,6 +6,11 @@ const ERROR_REASONS = {
 }
 
 function StorageManager(name) {
+
+    if(typeof name === 'undefined') {
+        throw new Error("'name' cannot be undefined.")
+    }
+
     this.storageContext = name
 }
 
@@ -25,26 +30,6 @@ Object.defineProperties(StorageManager.prototype, {
 
             return new Promise((resolve, reject) => {
                 return value ? resolve(JSON.parse(value)) : resolve(ERROR_REASONS.VALUE_NOT_FOUND)
-            })
-        },
-    },
-
-    get: {
-        enumerable: true,
-        value: async function() {
-
-            const key = this.storageContext
-
-            if(!key) {
-                throw new Error('The key (arg0) must not be a  falsy value.')
-            }
-
-            const value = localStorage.getItem(key)
-
-            return new Promise((resolve, reject) => {
-                return value
-                    ? resolve(JSON.parse(value))
-                    : reject(ERROR_REASONS.VALUE_NOT_FOUND)
             })
         },
     },

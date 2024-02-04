@@ -1,5 +1,4 @@
-import { buildElement, buildIcon, randomID } from '../utils.js'
-import { edit, remove } from './tools-manager.js'
+import { buildElement, buildIcon, randomID } from '../../../utils/_utils.js'
 
 const mainQuestions = document.querySelector('.questions-wrapper')
 const popupsCreated = []

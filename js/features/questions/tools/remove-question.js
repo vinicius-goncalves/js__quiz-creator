@@ -1,5 +1,5 @@
-import { loadQuestions } from '../../app.js'
-import StorageManager from '../storage/storage-manager.js'
+import { loadQuestions } from '../../../app.js'
+import StorageManager from '../../storage/storage-manager.js'
 
 const questions = new StorageManager('questions')
 

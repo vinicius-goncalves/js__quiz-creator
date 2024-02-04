@@ -1,7 +1,7 @@
-import StorageManager from '../storage/storage-manager.js'
+import StorageManager from '../../storage/storage-manager.js'
 
-import { clearHTML, verifyIfLocalStorageItemIsNull } from '../utils.js'
-import { buildElement, buildIcon } from '../utils.js'
+import { clearHTML } from '../../utils.js'
+import { buildElement } from '../../utils.js'
 
 const modalEditWrapper = document.querySelector('.modal-edit-wrapper')
 const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
@@ -13,7 +13,7 @@ const showModal = () => modalEditWrapper.classList.add('active')
 
 function prepareToEdit() {
     showModal()
-    modalEditWrapper.style.position = `absolute`
+    modalEditWrapper.style.position = 'absolute'
     clearHTML(modalEditQuizData)
 }
 

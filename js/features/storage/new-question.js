@@ -1,13 +1,7 @@
-// import Question from '../classes/Question.js'
-
-const createQuizWrapper = document
-    .querySelector('[data-modal="create-quiz-wrapper"]')
-const createQuizButton = createQuizWrapper
-    .querySelector('[data-button="create-quiz"]')
-const answersWrapper = createQuizWrapper
-    .querySelectorAll('[data-new-quiz="wrapper"]')
-const information = createQuizWrapper
-    .querySelector('.new-quiz-info')
+const createQuizWrapper = document.querySelector('[data-modal="create-quiz-wrapper"]')
+const createQuizButton = createQuizWrapper.querySelector('[data-button="create-quiz"]')
+const answersWrapper = createQuizWrapper.querySelectorAll('[data-new-quiz="wrapper"]')
+const information = createQuizWrapper.querySelector('.new-quiz-info')
 
 const titleInput = createQuizWrapper.querySelector('[data-new-quiz="title"]')
 const answersToArray = [...answersWrapper.values()]
