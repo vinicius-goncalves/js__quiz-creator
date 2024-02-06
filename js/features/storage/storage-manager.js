@@ -103,6 +103,17 @@ Object.defineProperties(StorageManager.prototype, {
         }
     },
 
+    add: {
+        enumerable: true,
+        value: async function(data) {
+
+            const allData = await this.getAll()
+            allData.push(data)
+
+            await this.set(allData, true)
+        }
+    },
+
     delete: {
         enumerable: true,
         value: async function(key) {

@@ -27,10 +27,7 @@
         <header class="main-header">
             <h1 href="#">quiz</h1>
             <nav data-navbar="navbar">
-                <a href="#" data-navbar="create-new-quiz" data-status="admin-mode-on">Create a quiz</a>
-                <div class="admin-mode-wrapper" data-status="ignore">
-                    <a href="#" data-navbar="admin-mode" data-status="admin-mode"></a>
-                </div>
+                <a href="#" data-open-modal="question-creation-wrapper" data-navbar="create-new-quiz">Create a quiz</a>
             </nav>
         </header>
 
@@ -41,16 +38,14 @@
         </div>
 
         <!-- Modal for create a quiz -->
-        <div data-modal="create-quiz-wrapper" class="modal-create-quiz-wrapper" data-js="modal-wrapper" style="display: none;">
-            <div data-modal="create-quiz-content">
-                <div class="modal-header">
-                    <div>
-                        <hgroup>
-                            <h1>Create a new quiz</h1>
-                            <p>It's time to create a new quiz! Let's go there!</p>
-                        </hgroup>
-                    </div>
-                    <i class="material-icons close" data-close="create-quiz-wrapper">close</i>
+        <div data-modal="question-creation-wrapper" data-js="modal-wrapper">
+            <div question-creation-wrapper="content">
+                <div data-question-creation-content="header">
+                    <hgroup data-question-creation-content="description">
+                        <h1>Create a new quiz</h1>
+                        <p>It's time to create a new quiz! Let's go there!</p>
+                    </hgroup>
+                    <span class="material-icons close-btn" data-close-modal="question-creation-wrapper" role="button">close</span>
                 </div>
                 <div class="question-creator">
                     <div class="question-wrapper">
@@ -58,7 +53,7 @@
                             <hgroup>
                                 <h2>Quiz title</h2>
                                 <p>
-                                    This is the quiz's title. Example: <q>When "const" keyword was implement in JavaScript?</q>
+                                    This is the quiz's title. Example: <q>When was "const" keyword implement in JavaScript?</q>
                                 </p>
                             </hgroup>
                         </div>
@@ -78,82 +73,66 @@
                                 </hgroup>
                             </div>
                             <div class="new-answers-wrapper">
-                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                <label class="new-answer-wrapper">
                                     <span>
                                         a&rpar;
                                     </span>
                                     <input
-                                        name="answer-wrapper"
+                                        data-new-quiz="answer"
                                         type="radio"
-                                        id="creator-letter-a"
-                                        data-radio="radiocheck"
-                                        tabindex="-1">
+                                        data-letter="a">
                                     <input
                                         type="text"
-                                        id="creator-answer-a"
-                                        data-creator-answer="creator-answer"
-                                        data-letter="a">
+                                        value="Hello World">
                                 </label>
-                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                <label class="new-answer-wrapper">
                                     <span>
                                         b&rpar;
                                     </span>
                                     <input
-                                        name="answer-wrapper"
+                                        data-new-quiz="answer"
                                         type="radio"
-                                        id="creator-letter-b"
-                                        data-radio="radiocheck"
-                                        tabindex="-1">
+                                        data-letter="b">
                                     <input
                                         type="text"
-                                        id="creator-answer-b"
-                                        data-creator-answer="creator-answer"
-                                        data-letter="b">
+                                        value="Hello World">
                                 </label>
-                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                <label class="new-answer-wrapper">
                                     <span>
                                         c&rpar;
                                     </span>
                                     <input
-                                        name="answer-wrapper"
+                                        data-new-quiz="answer"
                                         type="radio"
-                                        id="creator-letter-c"
-                                        data-radio="radiocheck"
-                                        tabindex="-1">
+                                        data-letter="c">
                                     <input
                                         type="text"
-                                        id="creator-answer-c"
-                                        data-creator-answer="creator-answer"
-                                        data-letter="c">
+                                        value="Hello World">
                                 </label>
-                                <label data-new-quiz="wrapper" class="new-answer-wrapper">
+                                <label class="new-answer-wrapper">
                                     <span>
                                         d&rpar;
                                     </span>
                                     <input
-                                        name="answer-wrapper"
+                                        data-new-quiz="answer"
                                         type="radio"
-                                        id="creator-letter-d"
-                                        data-radio="radiocheck"
-                                        tabindex="-1">
+                                        data-letter="d">
                                     <input
                                         type="text"
-                                        id="creator-answer-d"
-                                        data-creator-answer="creator-answer"
-                                        data-letter="d">
+                                        value="Hello World">
                                 </label>
                             </div>
                         </div>
                         <p class="new-quiz-info"></p>
                     </div>
-                </div>
-                <div class="modal-creator-quiz-buttons-wrapper">
-                    <custom-button
-                        text="Random Text"
-                        data-button="generate-lorem"></custom-button>
-                    <custom-button
-                        text="Create"
-                        data-button="create-quiz"></custom-button>
+                    <div class="modal-creator-quiz-buttons-wrapper">
+                        <custom-button
+                            text="Create quiz"
+                            data-button="create-quiz"></custom-button>
+                        <custom-button
+                            text="Generate template"
+                            data-button="generate-lorem"></custom-button>
+                    </div>
                 </div>
             </div>
         </div>

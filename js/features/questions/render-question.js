@@ -3,9 +3,7 @@ import { buildElement, buildIcon } from '../../utils/_utils.js'
 
 function createAnswers(questionId, answers) {
 
-    const answersArr = Object.entries(answers)
-
-    const answersElements = answersArr.map(([ letter, answer ], index) => {
+    const answersElements = Object.entries(answers).map(([ letter, answer ], index) => {
 
         const answerWrapper = buildElement('label')
             .addClass('answers-label')

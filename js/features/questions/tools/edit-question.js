@@ -1,7 +1,6 @@
 import StorageManager from '../../storage/storage-manager.js'
 
-import { clearHTML } from '../../utils.js'
-import { buildElement } from '../../utils.js'
+import { buildElement, clearTree } from '../../../utils/_utils.js'
 
 const modalEditWrapper = document.querySelector('.modal-edit-wrapper')
 const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
@@ -14,7 +13,7 @@ const showModal = () => modalEditWrapper.classList.add('active')
 function prepareToEdit() {
     showModal()
     modalEditWrapper.style.position = 'absolute'
-    clearHTML(modalEditQuizData)
+    clearTree(modalEditQuizData)
 }
 
 function findQuestion(questionId) {

@@ -1,10 +1,10 @@
-import StorageManager from '../storage/storage-manager.js';
-import renderQuestion from './render-question.js';
+import StorageManager from '../storage/storage-manager.js'
+import renderQuestion from './render-question.js'
 
 const questionsWrapper = document.querySelector('.questions-wrapper')
 
 const questionsStorage = new StorageManager('questions')
-const questions = await questionsStorage.getAll();
+const questions = await questionsStorage.getAll()
 
 function createQuestionsFragment() {
 

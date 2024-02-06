@@ -1,15 +1,27 @@
-import { loadQuestions } from '../../../app.js'
 import StorageManager from '../../storage/storage-manager.js'
 
-const questions = new StorageManager('questions')
+const questionsCache = new StorageManager('questions')
+const questions = await questionsCache.getAll()
+
+function removeFromDOM(questionId) {
+
+    const question = document.querySelector(`[data-quiz="container-${questionId}"]`)
+
+    if(question) {
+        question.remove()
+    }
+}
+
+function removeQuestionById(questionId) {
+    return questions.filter(({ id }) => id != questionId)
+}
 
 async function remove(questionId) {
 
-    const previousQuestions = await questions.getAll()
-    const newQuestions = previousQuestions.filter(({ id }) => id != questionId)
+    const updatedQuestions = removeQuestionById(questionId)
+    await questionsCache.set(updatedQuestions, true)
 
-    await questions.set(newQuestions, true)
-    await loadQuestions()
+    removeFromDOM(questionId)
 }
 
 export default remove
