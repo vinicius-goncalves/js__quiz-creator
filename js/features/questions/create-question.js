@@ -3,7 +3,7 @@ import renderQuestion from './render-question.js'
 
 const newQuestionWrapper = document.querySelector('.answers')
 const createQuestionBtn = document.querySelector('[data-button="create-quiz"]')
-const questionsWrapper = document.querySelector('.questions-wrapper')
+const questionsWrapper = document.querySelector('.question-creator')
 
 const questionsCache = new StorageManager('questions')
 
@@ -11,7 +11,9 @@ const questionControl = {
 
     getNewQuestionTitle: function() {
 
-        const questionTitle = newQuestionWrapper.querySelector('[data-new-quiz="title"]')
+        const questionTitle = questionsWrapper.querySelector('[data-new-quiz="title"]')
+
+        console.log(questionTitle)
 
         if(questionTitle === null) {
             return 'Untitled'

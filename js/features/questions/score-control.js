@@ -13,9 +13,9 @@ const getAnswers = () => [...DOMQuestions].map(selectAnswers)
 async function getCorrectAnswer(questionId) {
 
     const allQuestions = await questions.getAll()
-    const { correctAnswer } = allQuestions.find(({ id }) => id === questionId)
+    const { answer } = allQuestions.find(({ id }) => id == questionId)
 
-    return correctAnswer
+    return answer
 }
 
 function createQuestionControl({ questionId, checkedAnswer, correctAnswer }) {

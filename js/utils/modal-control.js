@@ -19,6 +19,8 @@ function toggleModalVisibility(modal) {
     const modalVisibility = window.getComputedStyle(modalElement).display
     const newVisibility = modalVisibility === 'none' ? 'block' : 'none'
 
+    console.log(modalElement)
+
     modalElement.style.setProperty('display', newVisibility)
 }
 

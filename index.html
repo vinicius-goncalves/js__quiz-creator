@@ -15,8 +15,15 @@
             rel="stylesheet"
             href="css/style.css"
             type="text/css"
-            title="Unique Style"
             referrerpolicy="no-referrer-when-downgrade">
+        <link
+            rel="stylesheet"
+            href="css/modals/template.css"
+            type="text/css">
+        <link
+            rel="stylesheet"
+            href="css/modals/template.css"
+            type="text/css">
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -24,108 +31,109 @@
     </head>
     <body>
 
+        <!-- <div data-features="container">
+            <div class="timer-bar" style="position: fixed; top: 0; height: 5px; width: 100%; background-color: var(--color3); z-index: 1; transition: width 300ms;"></div>
+            <span class="timer-seconds" style="position: fixed; top: 0; color: var(--color3); font-size: 1rem; transition: left 300ms">0.5s</span>
+        </div> -->
+
         <header class="main-header">
             <h1 href="#">quiz</h1>
             <nav data-navbar="navbar">
-                <a href="#" data-open-modal="question-creation-wrapper" data-navbar="create-new-quiz">Create a quiz</a>
+                <a href="#" data-open-modal="question-creator" data-navbar="create-new-quiz">Create a quiz</a>
             </nav>
         </header>
 
         <main class="questions-wrapper"></main>
+
         <p class="result"></p>
         <div class="buttons-container">
             <input type="button" data-button="result" value="See result">
         </div>
 
-        <!-- Modal for create a quiz -->
-        <div data-modal="question-creation-wrapper" data-js="modal-wrapper">
-            <div question-creation-wrapper="content">
-                <div data-question-creation-content="header">
-                    <hgroup data-question-creation-content="description">
+        <!-- Modal to create a quiz -->
+        <div data-modal="question-creator" style="display: none;">
+            <div data-modal-content="question-creator">
+                <div data-question-creator-content="header">
+                    <hgroup data-question-creator-content="description">
                         <h1>Create a new quiz</h1>
                         <p>It's time to create a new quiz! Let's go there!</p>
                     </hgroup>
-                    <span class="material-icons close-btn" data-close-modal="question-creation-wrapper" role="button">close</span>
+                    <span class="material-icons close-btn" data-close-modal="question-creator" role="button">close</span>
                 </div>
-                <div class="question-creator">
-                    <div class="question-wrapper">
-                        <div class="title">
-                            <hgroup>
-                                <h2>Quiz title</h2>
-                                <p>
-                                    This is the quiz's title. Example: <q>When was "const" keyword implement in JavaScript?</q>
-                                </p>
-                            </hgroup>
-                        </div>
-                        <input
-                            data-new-quiz="title"
-                            type="text"
-                            class="creator-question-title"
-                            spellcheck="false"
-                            translate="no">
+                <div data-question-creator="details-wrapper">
+                    <div data-question-details="section">
+                        <hgroup data-question-details="header">
+                            <h2 data-question-details-header="title">Quiz title</h2>
+                            <p data-question-details-header="description">
+                                What is your quiz's title?
+                            </p>
+                        </hgroup>
+                        <input data-new-quiz="title" type="text" class="creator-question-title" spellcheck="false" translate="no"
+                            placeholder='In which ECMAScript version the keyword "const" was implement in JavaScript?'>
                     </div>
-                    <div class="answers">
-                        <div class="question-wrapper">
-                            <div class="title">
-                                <hgroup>
-                                    <h2>Answers</h2>
-                                    <p>Define the quiz's answers - the checked radio means that one is going to be the correct answer.</p>
-                                </hgroup>
-                            </div>
-                            <div class="new-answers-wrapper">
-                                <label class="new-answer-wrapper">
+                    <div data-question-details="answers-section">
+                        <div data-question-details="section">
+                            <hgroup data-question-details="header">
+                                <h2 data-question-details-header="title">Answers</h2>
+                                <p data-question-details-header="description">Define the quiz's answers. Pay attention: the checked radio means that one is going to be the correct answer.</p>
+                            </hgroup>
+                            <div data-question-details="answers">
+                                <label data-question-details="new-answer">
                                     <span>
                                         a&rpar;
                                     </span>
                                     <input
+                                        name="radio-new-answer"
                                         data-new-quiz="answer"
                                         type="radio"
                                         data-letter="a">
                                     <input
                                         type="text"
-                                        value="Hello World">
+                                        placeholder="ES6">
                                 </label>
-                                <label class="new-answer-wrapper">
+                                <label data-question-details="new-answer">
                                     <span>
                                         b&rpar;
                                     </span>
                                     <input
+                                        name="radio-new-answer"
                                         data-new-quiz="answer"
                                         type="radio"
                                         data-letter="b">
                                     <input
                                         type="text"
-                                        value="Hello World">
+                                        placeholder="ES1">
                                 </label>
-                                <label class="new-answer-wrapper">
+                                <label data-question-details="new-answer">
                                     <span>
                                         c&rpar;
                                     </span>
                                     <input
+                                        name="radio-new-answer"
                                         data-new-quiz="answer"
                                         type="radio"
                                         data-letter="c">
                                     <input
                                         type="text"
-                                        value="Hello World">
+                                        placeholder="ES5">
                                 </label>
-                                <label class="new-answer-wrapper">
+                                <label data-question-details="new-answer">
                                     <span>
                                         d&rpar;
                                     </span>
                                     <input
+                                        name="radio-new-answer"
                                         data-new-quiz="answer"
                                         type="radio"
                                         data-letter="d">
                                     <input
                                         type="text"
-                                        value="Hello World">
+                                        placeholder="ES3">
                                 </label>
                             </div>
                         </div>
-                        <p class="new-quiz-info"></p>
                     </div>
-                    <div class="modal-creator-quiz-buttons-wrapper">
+                    <div data-question-creator="buttons-container">
                         <custom-button
                             text="Create quiz"
                             data-button="create-quiz"></custom-button>
@@ -137,19 +145,9 @@
             </div>
         </div>
 
-        <!-- Modal for dashboard -->
-        <!-- <div class="modal-dashboard-wrapper" data-js="modal-wrapper">
-            <div class="modal-dashboard-content">
-                <div class="modal-header">
-                    <h1>quiz Dashboard</h1>
-                    <i class="material-icons close" data-close="modal-dashboard-wrapper">close</i>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- Modal for edit content -->
-        <!-- <div class="modal-edit-wrapper" data-js="modal-wrapper">
-            <div class="modal-edit-content">
+        <!-- Modal to edit content -->
+        <div data-modal="question-edit-wrapper" style="display: none;">
+            <div data-edit-wrapper="content">
                 <div class="modal-header">
                     <h1>quiz Edit Question</h1>
                     <i class="material-icons close" data-close="modal-edit-wrapper">close</i>
@@ -159,7 +157,7 @@
                     <input type="button" value="Edit quiz" class="confirm-edit">
                 </div>
             </div>
-        </div> -->
+        </div>
 
         <script src="/js/app.js" type="module"></script>
 

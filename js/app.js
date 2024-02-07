@@ -1,4 +1,5 @@
 import('./modules-loader.js')
+import('./features/timer.js')
 import renderQuestions from './features/questions/load-questions.js'
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -15,6 +16,6 @@ if(!localStorage.getItem('questions')) {
             "c": "Monday",
             "d": "Thursday"
         },
-        "correctAnswer": "b"
+        "answer": "b"
     }]))
 }
