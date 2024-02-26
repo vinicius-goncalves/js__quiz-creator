@@ -1,4 +1,4 @@
-import popup from './tools/tools-popup.js'
+import('./tools/tools-popup.js')
 import { buildElement, buildIcon } from '../../utils/_utils.js'
 
 function createAnswers(questionId, answers) {
@@ -30,6 +30,10 @@ function createAnswers(questionId, answers) {
     return answersElements
 }
 
+function createToolsPopup() {
+
+}
+
 function renderQuestion(question, quizIndex) {
 
     if(typeof question === 'undefined') {
@@ -40,7 +44,6 @@ function renderQuestion(question, quizIndex) {
 
     const questionWrapper = buildElement('div')
         .addAttribute('data-quiz', `container-${id}`)
-        .setEvent('mouseleave', (event) => !event.toElement?.matches('[data-tools-popup]') ? popup.deleteAll() : undefined)
         .build()
 
     const quizHeader = buildElement('header')

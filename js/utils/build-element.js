@@ -90,7 +90,7 @@ function buildElement(element) {
 
         },
 
-        build: function(debug) {
+        build: function(debug = false) {
 
             if(debug) {
 

@@ -1,9 +1,15 @@
 import('./modules-loader.js')
-import('./features/timer.js')
 import renderQuestions from './features/questions/load-questions.js'
+import questionControl from './features/questions/create-question.js'
+
+const questionCreatorWrapper = document.querySelector('[data-modal="question-creator"]')
 
 window.addEventListener('DOMContentLoaded', async () => {
     renderQuestions()
+})
+
+questionCreatorWrapper.addEventListener('input', () => {
+    questionControl.validateNewQuestion()
 })
 
 if(!localStorage.getItem('questions')) {

@@ -1,9 +1,10 @@
 import StorageManager from '../storage/storage-manager.js'
 import renderQuestion from './render-question.js'
+import createToast from './../toast.js'
 
-const newQuestionWrapper = document.querySelector('.answers')
+const questionCreatorWrapper = document.querySelector('[data-modal="question-creator"]')
 const createQuestionBtn = document.querySelector('[data-button="create-quiz"]')
-const questionsWrapper = document.querySelector('.question-creator')
+const questionsWrapper = document.querySelector('.questions-wrapper')
 
 const questionsCache = new StorageManager('questions')
 
@@ -11,9 +12,7 @@ const questionControl = {
 
     getNewQuestionTitle: function() {
 
-        const questionTitle = questionsWrapper.querySelector('[data-new-quiz="title"]')
-
-        console.log(questionTitle)
+        const questionTitle = questionCreatorWrapper.querySelector('[data-new-quiz="title"]')
 
         if(questionTitle === null) {
             return 'Untitled'
@@ -24,7 +23,7 @@ const questionControl = {
 
     getAnswers: function() {
 
-        const answersElements = newQuestionWrapper.querySelectorAll('[class="new-answer-wrapper"]')
+        const answersElements = questionCreatorWrapper.querySelectorAll('[data-question-details="new-answer"]')
         const answersArr = [...answersElements]
 
         return answersArr
@@ -69,22 +68,53 @@ const questionControl = {
         ]
 
         return { title: newTitle, answers: newAnswers, answer: newAnswer }
+    },
+
+    validateNewQuestion() {
+
+        const INPUT_TEXT_CHILD_INDEX = 2
+        const INVALID_CLASS_NAME = 'invalid-field'
+
+        const questionTitleInput = questionCreatorWrapper.querySelector('[data-new-quiz="title"]')
+        const answersInputs = this.getAnswers().map(answer => answer.children.item(INPUT_TEXT_CHILD_INDEX))
+
+        const fieldsInputs = [ questionTitleInput, ...answersInputs ]
+
+        for(const input of fieldsInputs) {
+            input.classList.toggle(INVALID_CLASS_NAME, input.value.length === 0)
+        }
+
+        const areAllValid = fieldsInputs.every(input => !input.classList.contains(INVALID_CLASS_NAME))
+
+        return areAllValid
     }
 }
 
-function renderNewQuestion() {
-
-    const questionObjectCreated = questionControl.createQuestionObject()
-    const newQuestion = Object.assign(questionObjectCreated, { id: Math.random( )})
-
+function renderNewQuestion(newQuestion) {
     const renderedQuestion = renderQuestion(newQuestion)
-
-    questionsCache.add(newQuestion)
     questionsWrapper.appendChild(renderedQuestion)
 }
 
+function createQuestion() {
+
+    const validQuiz = questionControl.validateNewQuestion()
+
+    if(!validQuiz) {
+        createToast('Fill out all the fields before creating a quiz', questionCreatorWrapper)
+        return
+    }
+
+    const questionObjectCreated = questionControl.createQuestionObject()
+    const newQuestion = { ...questionObjectCreated, id: Math.random() }
+
+    renderNewQuestion(newQuestion)
+    questionsCache.add(newQuestion)
+
+    createToast('Quiz created!', questionCreatorWrapper)
+}
+
 createQuestionBtn.addEventListener('click', () => {
-    console.log(renderNewQuestion())
+    createQuestion()
 })
 
-export default {}
+export default questionControl

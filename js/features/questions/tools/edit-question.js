@@ -8,83 +8,96 @@ const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
 const questions = new StorageManager('questions')
 const allQuestions = await questions.getAll()
 
-const showModal = () => modalEditWrapper.classList.add('active')
+// const showModal = () => modalEditWrapper.classList.add('active')
 
-function prepareToEdit() {
-    showModal()
-    modalEditWrapper.style.position = 'absolute'
-    clearTree(modalEditQuizData)
+function prepareToEdit(event) {
+
 }
 
-function findQuestion(questionId) {
+// function prepareToEdit() {
+//     showModal()
+//     modalEditWrapper.style.position = 'absolute'
+//     clearTree(modalEditQuizData)
+// }
 
-    for(const [ index, question ] of allQuestions.entries()) {
-        if(question.id == questionId) {
-            return { question, index }
-        }
-    }
-}
+// function findQuestion(questionId) {
 
-function createTempEditModalWith(question, index) {
+//     for(const [ index, question ] of allQuestions.entries()) {
+//         if(question.id == questionId) {
+//             return { question, index }
+//         }
+//     }
+// }
 
-    const { id, title, answers, correctAnswer } = question
+// function createTempEditModalWith(question, index) {
 
-    const editAnswerModal = buildElement('div')
-        .addClass('modal-edit-answers-wrapper')
-        .build()
+//     const { id, title, answers, correctAnswer } = question
 
-    buildElement('input')
-        .setType('text')
-        .addAttribute('data-temp-edit-title', id)
-        .addAttribute('value', title)
-        .appendOn(modalEditQuizData)
-        .build()
+//     const editAnswerModal = buildElement('div')
+//         .addClass('modal-edit-answers-wrapper')
+//         .build()
 
-    buildElement('h2')
-        .setText('Answers')
-        .appendOn(editAnswerModal)
-        .build()
+//     buildElement('input')
+//         .setType('text')
+//         .addAttribute('data-temp-edit-title', id)
+//         .addAttribute('value', title)
+//         .appendOn(modalEditQuizData)
+//         .build()
 
-    const answersArr = Object.entries(answers)
+//     buildElement('h2')
+//         .setText('Answers')
+//         .appendOn(editAnswerModal)
+//         .build()
 
-    answersArr.forEach(([ letter, answer ]) => {
+//     const answersArr = Object.entries(answers)
 
-        const questionContainer = buildElement('div')
-            .addClass('temp-edit')
-            .appendOn(editAnswerModal)
-            .build()
+//     answersArr.forEach(([ letter, answer ]) => {
 
-       buildElement('input')
-            .setType('radio')
-            .addAttribute('letter', letter)
-            .addAttribute('name', 'temp-edit-quiz')
-            .addAttribute('checked', letter === correctAnswer)
-            .appendOn(questionContainer)
-            .build()
+//         const questionContainer = buildElement('div')
+//             .addClass('temp-edit')
+//             .appendOn(editAnswerModal)
+//             .build()
 
-        buildElement('input')
-            .setType('text')
-            .addAttribute(`data-temp-edit-text-${letter}`, id)
-            .addAttribute('data-temp-edit', `letter-${letter}-${index}`)
-            .addAttribute('value', answer)
-            .appendOn(questionContainer)
-            .build()
+//        buildElement('input')
+//             .setType('radio')
+//             .addAttribute('letter', letter)
+//             .addAttribute('name', 'temp-edit-quiz')
+//             .addAttribute('checked', letter === correctAnswer)
+//             .appendOn(questionContainer)
+//             .build()
 
-    })
+//         buildElement('input')
+//             .setType('text')
+//             .addAttribute(`data-temp-edit-text-${letter}`, id)
+//             .addAttribute('data-temp-edit', `letter-${letter}-${index}`)
+//             .addAttribute('value', answer)
+//             .appendOn(questionContainer)
+//             .build()
 
-    modalEditQuizData.appendChild(editAnswerModal)
-}
+//     })
+
+//     modalEditQuizData.appendChild(editAnswerModal)
+// }
+
+// function edit(questionId) {
+
+//     if(!questionId) {
+//         throw new Error('The id must not be undefined.')
+//     }
+
+//     prepareToEdit()
+
+//     const { question, index } = findQuestion(questionId)
+//     createTempEditModalWith(question, index)
+// }
 
 function edit(questionId) {
 
-    if(!questionId) {
-        throw new Error('The id must not be undefined.')
+    if(typeof questionId === 'undefined') {
+        throw new Error('The questionId for editing is undefined.')
     }
 
-    prepareToEdit()
-
-    const { question, index } = findQuestion(questionId)
-    createTempEditModalWith(question, index)
+    // prepareToEdit()
 }
 
 export default edit
