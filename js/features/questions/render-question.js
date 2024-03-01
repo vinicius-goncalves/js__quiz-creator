@@ -30,10 +30,6 @@ function createAnswers(questionId, answers) {
     return answersElements
 }
 
-function createToolsPopup() {
-
-}
-
 function renderQuestion(question, quizIndex) {
 
     if(typeof question === 'undefined') {

@@ -6,7 +6,7 @@ const questionsWrapper = document.querySelector('.questions-wrapper')
 const popupsCreated = []
 
 const tools = [
-    { icon: 'edit', funcContext: 'editTool', isModalTrigger: true, modalTarget: 'question-editor' },
+    { icon: 'edit', funcContext: 'editTool', isModalTrigger: true },
     { icon: 'delete', funcContext: 'removeTool', isModalTrigger: false }
 ]
 
@@ -79,7 +79,7 @@ function renderPopupTools(event) {
         .appendOn(popupContent)
         .build()
 
-    for(const { icon, funcContext, isModalTrigger, modalTarget } of tools) {
+    for(const { icon, funcContext, isModalTrigger } of tools) {
 
         const toolContainer = buildElement('li')
             .addAttribute('data-tools-popup', 'tool')
@@ -100,7 +100,8 @@ function renderPopupTools(event) {
 
 
         if(isModalTrigger) {
-            toolContainer.setAttribute('data-open-modal', modalTarget)
+            toolContainer.setAttribute('data-open-modal', 'question-management')
+            toolContainer.setAttribute('data-modal-context', 'editor')
         }
 
         const toolsContext = popupToolsContext.get(popupContainer)

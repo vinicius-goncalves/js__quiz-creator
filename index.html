@@ -37,21 +37,79 @@
         <div data-toast="container"></div>
 
         <header class="main-header">
-            <h1 href="#">quiz</h1>
+            <h1>quiz</h1>
             <nav data-navbar="navbar">
-                <a href="#" data-open-modal="question-creator" data-navbar="create-new-quiz">Create a quiz</a>
+                <a href="#"
+                    data-open-modal="question-management"
+                    data-modal-context="creator"
+                    data-navbar="create-new-quiz">Create a quiz</a>
             </nav>
         </header>
 
         <main class="questions-wrapper"></main>
-
         <p class="result"></p>
+
         <div class="buttons-container">
             <input type="button" data-button="result" value="See result">
         </div>
 
+        <div data-modal="question-management" data-management-context="creator" style="display: none;">
+            <div data-modal-content="question-management">
+                <div data-question-management-content="header">
+                    <hgroup data-question-management-content="description">
+                        <h1 data-question-management-description="title"></h1>
+                        <p data-question-management-description="detail"></p>
+                    </hgroup>
+                    <span class="material-icons close-btn" data-close-modal="question-management" role="button">close</span>
+                </div>
+                <div data-question-management="question-details">
+                    <div data-question-management="title" class="question-management-section">
+                        <hgroup class="question-section-header">
+                            <h2 class="question-section-header-title"></h2>
+                            <p class="question-section-header-description"></p>
+                        </hgroup>
+                        <input data-new-quiz="title" type="text" class="creator-question-title" spellcheck="false" translate="no" placeholder='In which ECMAScript version was the "const" keyword implemented in JavaScript?'>
+                    </div>
+                    <div data-question-details="answers-section">
+                        <div class="question-management-section">
+                            <hgroup class="question-section-header">
+                                <h2 class="question-section-header-title"></h2>
+                                <p class="question-section-header-description"></p>
+                            </hgroup>
+                            <div data-question-details="answers">
+                                <label data-question-details="new-answer">
+                                    <span>a&rpar;</span>
+                                    <input name="radio-new-answer" data-new-quiz="answer" type="radio" data-letter="a">
+                                    <input type="text" placeholder="ES6">
+                                </label>
+                                <label data-question-details="new-answer">
+                                    <span>b&rpar;</span>
+                                    <input name="radio-new-answer" data-new-quiz="answer" type="radio" data-letter="b">
+                                    <input type="text" placeholder="ES1">
+                                </label>
+                                <label data-question-details="new-answer">
+                                    <span>c&rpar;</span>
+                                    <input name="radio-new-answer" data-new-quiz="answer" type="radio" data-letter="c">
+                                    <input type="text" placeholder="ES5">
+                                </label>
+                                <label data-question-details="new-answer">
+                                    <span>d&rpar;</span>
+                                    <input name="radio-new-answer" data-new-quiz="answer" type="radio" data-letter="d">
+                                    <input type="text" placeholder="ES3">
+                                </label>
+                            </div>
+                            <small>If you don't check any radio input, the default answer will be the letter <q>a</q>.</small>
+                        </div>
+                    </div>
+                    <div data-question-management="buttons-container">
+                        <button type="button" data-button="trigger-context"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal for question creating -->
-        <div data-modal="question-creator" style="display: none;">
+        <!-- <div data-modal="question-creator" style="display: none;">
             <div data-modal-content="question-creator">
                 <div data-question-creator-content="header">
                     <hgroup data-question-creator-content="description">
@@ -135,17 +193,16 @@
                         </div>
                     </div>
                     <div data-question-creator="buttons-container">
-                        <custom-button
-                            text="Create quiz"
-                            data-button="create-quiz">
-                        </custom-button>
+                        <button type="button" data-button="create-quiz">
+                            Create quiz
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Modal for question editing -->
-        <div data-modal="question-editor" style="display: none;">
+        <!-- <div data-modal="question-editor" style="display: none;">
             <div data-modal-content="question-editor">
                 <div data-question-creator-content="header">
                     <hgroup data-question-creator-content="description">
@@ -162,7 +219,7 @@
                                 What is the new quiz title?
                             </p>
                         </hgroup>
-                        <input data-new-quiz="title" type="text" class="creator-question-title" spellcheck="false" translate="no"
+                        <input data-edit-quiz="title" type="text" class="creator-question-title" spellcheck="false" translate="no"
                             placeholder='In which ECMAScript version was the "const" keyword implemented in JavaScript?'>
                     </div>
                     <div data-question-details="answers-section">
@@ -172,52 +229,52 @@
                                 <p data-question-details-header="description">Update the quiz correct answer. The checked radio means that one is going to be the new correct answer.</p>
                             </hgroup>
                             <div data-question-details="answers">
-                                <label data-question-details="new-answer">
+                                <label data-question-details="edit-answer">
                                     <span>
                                         a&rpar;
                                     </span>
                                     <input
                                         name="radio-new-answer"
-                                        data-new-quiz="answer"
+                                        data-edit-quiz="answer"
                                         type="radio"
                                         data-letter="a">
                                     <input
                                         type="text"
                                         placeholder="ES6">
                                 </label>
-                                <label data-question-details="new-answer">
+                                <label data-question-details="edit-answer">
                                     <span>
                                         b&rpar;
                                     </span>
                                     <input
                                         name="radio-new-answer"
-                                        data-new-quiz="answer"
+                                        data-edit-quiz="answer"
                                         type="radio"
                                         data-letter="b">
                                     <input
                                         type="text"
                                         placeholder="ES1">
                                 </label>
-                                <label data-question-details="new-answer">
+                                <label data-question-details="edit-answer">
                                     <span>
                                         c&rpar;
                                     </span>
                                     <input
                                         name="radio-new-answer"
-                                        data-new-quiz="answer"
+                                        data-edit-quiz="answer"
                                         type="radio"
                                         data-letter="c">
                                     <input
                                         type="text"
                                         placeholder="ES5">
                                 </label>
-                                <label data-question-details="new-answer">
+                                <label data-question-details="edit-answer">
                                     <span>
                                         d&rpar;
                                     </span>
                                     <input
                                         name="radio-new-answer"
-                                        data-new-quiz="answer"
+                                        data-edit-quiz="answer"
                                         type="radio"
                                         data-letter="d">
                                     <input
@@ -228,28 +285,13 @@
                         </div>
                     </div>
                     <div data-question-creator="buttons-container">
-                        <custom-button
-                            text="Update quiz"
-                            data-button="create-quiz">
-                        </custom-button>
+                        <button type="button" data-button="update-quiz">
+                            Update quiz
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Modal to edit content -->
-        <div data-modal="question-edit-wrapper" style="display: none;">
-            <div data-edit-wrapper="content">
-                <div class="modal-header">
-                    <h1>quiz Edit Question</h1>
-                    <i class="material-icons close" data-close="modal-edit-wrapper">close</i>
-                </div>
-                <div class="modal-edit-quiz-data"></div>
-                <div class="buttons-container">
-                    <input type="button" value="Edit quiz" class="confirm-edit">
-                </div>
-            </div>
-        </div>
+        </div> -->
 
         <script src="/js/app.js" type="module"></script>
 

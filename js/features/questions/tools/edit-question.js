@@ -2,102 +2,68 @@ import StorageManager from '../../storage/storage-manager.js'
 
 import { buildElement, clearTree } from '../../../utils/_utils.js'
 
-const modalEditWrapper = document.querySelector('.modal-edit-wrapper')
-const modalEditQuizData = document.querySelector('.modal-edit-quiz-data')
+const updateQuestionBtn = document.querySelector('[data-button="update-quiz"]')
+const questionEditorWrapper = document.querySelector('[data-modal="question-editor"]')
 
 const questions = new StorageManager('questions')
 const allQuestions = await questions.getAll()
 
-// const showModal = () => modalEditWrapper.classList.add('active')
+function getAnswers() {
 
-function prepareToEdit(event) {
+    const answersElements = questionEditorWrapper.querySelectorAll('[data-question-details="edit-answer"]')
+    const answersArr = [...answersElements]
 
+    return answersArr
 }
 
-// function prepareToEdit() {
-//     showModal()
-//     modalEditWrapper.style.position = 'absolute'
-//     clearTree(modalEditQuizData)
-// }
+async function updateQuestion(questionId, { title, answers, answer }) {
+    questions.update(questionId, { title, answers, answer })
+}
 
-// function findQuestion(questionId) {
+async function edit(questionId) {
 
-//     for(const [ index, question ] of allQuestions.entries()) {
-//         if(question.id == questionId) {
-//             return { question, index }
-//         }
-//     }
-// }
-
-// function createTempEditModalWith(question, index) {
-
-//     const { id, title, answers, correctAnswer } = question
-
-//     const editAnswerModal = buildElement('div')
-//         .addClass('modal-edit-answers-wrapper')
-//         .build()
-
-//     buildElement('input')
-//         .setType('text')
-//         .addAttribute('data-temp-edit-title', id)
-//         .addAttribute('value', title)
-//         .appendOn(modalEditQuizData)
-//         .build()
-
-//     buildElement('h2')
-//         .setText('Answers')
-//         .appendOn(editAnswerModal)
-//         .build()
-
-//     const answersArr = Object.entries(answers)
-
-//     answersArr.forEach(([ letter, answer ]) => {
-
-//         const questionContainer = buildElement('div')
-//             .addClass('temp-edit')
-//             .appendOn(editAnswerModal)
-//             .build()
-
-//        buildElement('input')
-//             .setType('radio')
-//             .addAttribute('letter', letter)
-//             .addAttribute('name', 'temp-edit-quiz')
-//             .addAttribute('checked', letter === correctAnswer)
-//             .appendOn(questionContainer)
-//             .build()
-
-//         buildElement('input')
-//             .setType('text')
-//             .addAttribute(`data-temp-edit-text-${letter}`, id)
-//             .addAttribute('data-temp-edit', `letter-${letter}-${index}`)
-//             .addAttribute('value', answer)
-//             .appendOn(questionContainer)
-//             .build()
-
-//     })
-
-//     modalEditQuizData.appendChild(editAnswerModal)
-// }
-
-// function edit(questionId) {
-
-//     if(!questionId) {
-//         throw new Error('The id must not be undefined.')
-//     }
-
-//     prepareToEdit()
-
-//     const { question, index } = findQuestion(questionId)
-//     createTempEditModalWith(question, index)
-// }
-
-function edit(questionId) {
+    sessionStorage.setItem('editing-question-id', questionId)
 
     if(typeof questionId === 'undefined') {
         throw new Error('The questionId for editing is undefined.')
     }
 
-    // prepareToEdit()
+    const questionFound = await questions.getById(questionId)
+
+    if(!questionFound) {
+        return
+    }
+
+    const quizTitle = questionEditorWrapper.querySelector('[data-edit-quiz="title"]')
+
+    const { title, answers, answer } = questionFound
+
+    quizTitle.value = title
+
+    getAnswers().forEach(answerLabel => {
+
+        const text = answerLabel.querySelector('input[type="text"]')
+        const radio = answerLabel.querySelector('input[type="radio"]')
+
+        const letter = radio.dataset.letter
+
+        if(answer === letter) {
+            radio.checked = true
+        }
+
+        text.value = answers[letter]
+    })
 }
+
+// updateQuestionBtn.addEventListener('click', () => {
+
+//     const editingQuestionId = sessionStorage.getItem('editing-question-id')
+
+//     const answers = getAnswers().map(answer => answer.querySelector('input[type="text"]').value)
+//     const correctAnswer = questionEditorWrapper.querySelector('input[type="radio"]:checked').dataset.letter
+//     const title = questionEditorWrapper.querySelector('[data-edit-quiz="title"]').value
+
+//     updateQuestion(editingQuestionId, { title, answers, answer: correctAnswer })
+// })
 
 export default edit

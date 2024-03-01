@@ -24,7 +24,7 @@ function animateToastTimer(renderedToast) {
             return
         }
 
-        requestAnimationFrame(() => animate())
+        requestAnimationFrame(animate)
     }
 
     animate()

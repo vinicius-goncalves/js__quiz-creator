@@ -26,9 +26,25 @@ function toggleModalVisibility(modal) {
 
 modalsBtns.forEach(modalBtn => modalBtn.addEventListener('click', () => toggleModalVisibility(modalBtn)))
 
-;(() => {
+function getBtnModalContext(modalBtn) {
+    const modalContext = modalBtn.getAttribute('data-modal-context')
+    return modalContext ? modalContext : 'creator'
+}
 
-    const mutationChangesTypes = [
+function updateModalContext(modalBtn) {
+
+    const modalQuestionManagement = document.querySelector('[data-modal="question-management"]')
+    const modalContext = getBtnModalContext(modalBtn)
+    modalQuestionManagement.setAttribute('data-management-context', modalContext)
+}
+
+function handleModalContexts() {
+    allModalsOpenBtn.forEach(modalBtn => modalBtn.addEventListener('click', () => updateModalContext(modalBtn)))
+}
+
+function handleNewModalBtns() {
+
+    const mutationsHandler = [
         { hasNewNodes: true, eventType: 'addEventListener', mutationProperty: 'addedNodes' },
         { hasNewNodes: false, eventType: 'removeEventListener', mutationProperty: 'removedNodes' }
     ]
@@ -41,8 +57,8 @@ modalsBtns.forEach(modalBtn => modalBtn.addEventListener('click', () => toggleMo
 
         const mutation = mutations[0]
 
-        const getMutationInfo = ({ hasNewNodes }) => hasNewNodes === mutation.addedNodes.length >= 1
-        const { eventType, mutationProperty } = mutationChangesTypes.find(getMutationInfo)
+        const getMutationInfoCallback = ({ hasNewNodes }) => hasNewNodes === mutation.addedNodes.length >= 1
+        const { eventType, mutationProperty } = mutationsHandler.find(getMutationInfoCallback)
 
         const openModalBtnContext = mutation[mutationProperty][0].querySelector('[data-open-modal]')
 
@@ -50,11 +66,16 @@ modalsBtns.forEach(modalBtn => modalBtn.addEventListener('click', () => toggleMo
             return
         }
 
-        openModalBtnContext[eventType]('click', () => toggleModalVisibility(openModalBtnContext))
+        openModalBtnContext[eventType]('click', () => {
+            toggleModalVisibility(openModalBtnContext)
+            updateModalContext(openModalBtnContext)
+        })
     })
 
     observer.observe(questionWrapper, {
         childList: true
     })
+}
 
-})()
+handleNewModalBtns()
+handleModalContexts()

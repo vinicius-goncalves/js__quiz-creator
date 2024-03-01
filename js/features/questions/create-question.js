@@ -1,6 +1,9 @@
 import StorageManager from '../storage/storage-manager.js'
 import renderQuestion from './render-question.js'
 import createToast from './../toast.js'
+import { randomID } from '../../utils/_utils.js'
+
+const modalContext = document.querySelector('[data-modal="question-management"]')
 
 const questionCreatorWrapper = document.querySelector('[data-modal="question-creator"]')
 const createQuestionBtn = document.querySelector('[data-button="create-quiz"]')
@@ -105,7 +108,7 @@ function createQuestion() {
     }
 
     const questionObjectCreated = questionControl.createQuestionObject()
-    const newQuestion = { ...questionObjectCreated, id: Math.random() }
+    const newQuestion = { ...questionObjectCreated, id: randomID() }
 
     renderNewQuestion(newQuestion)
     questionsCache.add(newQuestion)
@@ -113,8 +116,8 @@ function createQuestion() {
     createToast('Quiz created!', questionCreatorWrapper)
 }
 
-createQuestionBtn.addEventListener('click', () => {
-    createQuestion()
-})
+// createQuestionBtn.addEventListener('click', () => {
+//     createQuestion()
+// })
 
 export default questionControl

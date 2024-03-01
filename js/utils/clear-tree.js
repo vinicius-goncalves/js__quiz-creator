@@ -5,9 +5,11 @@ function clearTree(container) {
     }
 
     try {
-        while(container.firstChild) {
+
+        while(container.firstChild !== null) {
             container.removeChild(container.firstChild)
         }
+
     } catch(err) {
         console.log(err)
     }

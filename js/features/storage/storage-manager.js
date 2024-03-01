@@ -34,14 +34,6 @@ Object.defineProperties(StorageManager.prototype, {
         },
     },
 
-    getIndex: {
-        enumerable: true,
-        value: async function(questionId) {
-            const allQuestions = await this.getAll()
-            return allQuestions.findIndex(({ id }) => id == questionId)
-        }
-    },
-
     exists: {
         enumerable: true,
         value: async function() {
@@ -55,6 +47,39 @@ Object.defineProperties(StorageManager.prototype, {
                     resolve(false)
                 }
             })
+        }
+    },
+
+    getIndex: {
+        enumerable: true,
+        value: async function(questionId) {
+            const allQuestions = await this.getAll()
+            return allQuestions.findIndex(({ id }) => id == questionId)
+        }
+    },
+
+    getById: {
+        enumerable: true,
+        value: async function(questionId) {
+            const questions = await this.getAll()
+            return questions.find(({ id }) => id == questionId)
+        }
+    },
+
+    update: {
+        enumerable: true,
+        value: async function(questionId, { title, answers, answer }) {
+
+            const questionIndex = await this.getIndex(questionId)
+            const questionFound = (await this.getAll())[questionIndex]
+
+            questionFound.title = title
+            questionFound.answers = Object.entries(questionFound.answers).reduce((acc, item, index) => (acc[item[0]] = answers[index], acc), {})
+            questionFound.answer = answer
+
+            const updatedQuestions = (await this.getAll()).map(question => question.id == questionId ? questionFound : question)
+
+            this.set(updatedQuestions, true)
         }
     },
 
