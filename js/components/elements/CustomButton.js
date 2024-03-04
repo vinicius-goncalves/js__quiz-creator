@@ -1,6 +1,7 @@
 const styleRef = '/js/components/styles/custom-button.css'
 
 class CustomButton extends HTMLElement {
+
     constructor() {
         super()
 

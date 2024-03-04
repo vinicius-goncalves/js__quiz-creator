@@ -1,17 +1,18 @@
 button[type="button"] {
-    background-color: var(--color0);
-    font-size: 1.2rem;
-    color: var(--color5);
-    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 7px;
     border: 1px solid var(--color3);
-    outline: none;
-    margin: 5px;
-    cursor: pointer;
-    padding: 5px 15px;
-    transition: scale 200ms;
+    background-color: transparent;
+    color: var(--color5);
+    transition: background-color 200ms;
 }
 
 button[type="button"]:hover {
-    scale: 1.05;
-    /* box-shadow: 0px 0px 5px var(--color3); */
+    background-color: var(--color1);
+    cursor: pointer;
+}
+
+button[type="button"]:active {
+    transform: scale(.95)
 }

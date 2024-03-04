@@ -1,0 +1,38 @@
+.modal-edit-wrapper {
+    display: none;
+}
+
+[data-modal="question-edit-wrapper"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d0d0d93;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+[data-edit-wrapper="content"] {
+    position: absolute;
+    background-color: var(--color0);
+    border-radius: 10px;
+    box-shadow: 20px 20px var(--color6);
+    user-select: none;
+    width: 100%;
+    max-width: 700px;
+    min-height: 79vh;
+}
+
+[data-edit-wrapper="content"] input[type="text"] {
+    border: none;
+    outline: none;
+    background-color: var(--color3);
+    color: var(--color6);
+    font-size: 1.3rem;
+    text-indent: 5px;
+    border-radius: 4px;
+    padding: 5px;
+    width: 75%;
+}
