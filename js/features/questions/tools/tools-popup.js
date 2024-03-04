@@ -98,7 +98,6 @@ function renderPopupTools(event) {
             .prependOn(button)
             .build()
 
-
         if(isModalTrigger) {
             toolContainer.setAttribute('data-open-modal', 'question-management')
             toolContainer.setAttribute('data-modal-context', 'editor')

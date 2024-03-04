@@ -1,4 +1,4 @@
-import StorageManager from '../storage/storage-manager.js'
+import StorageManager from '../storage-manager.js'
 
 const resultButton = document.querySelector('[data-button="result"]')
 const resultText = document.querySelector('p.result')

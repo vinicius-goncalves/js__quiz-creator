@@ -1,12 +1,17 @@
-import StorageManager from '../storage/storage-manager.js'
+import StorageManager from '../storage-manager.js'
 import renderQuestion from './render-question.js'
 
 const questionsWrapper = document.querySelector('.questions-wrapper')
-
 const questionsStorage = new StorageManager('questions')
-const questions = await questionsStorage.getAll()
 
-function createQuestionsFragment() {
+async function createQuestionsFragment() {
+
+    const questions = await questionsStorage.getAll()
+
+    if(questions.length === 0) {
+        questionsWrapper.textContent = 'There are not any questions created yet. Create a new one!'
+        return
+    }
 
     const docFragment = document.createDocumentFragment()
 
@@ -19,7 +24,13 @@ function createQuestionsFragment() {
 }
 
 async function renderQuestions() {
-    const questionsFragment = createQuestionsFragment()
+
+    const questionsFragment = await createQuestionsFragment()
+
+    if(!questionsFragment) {
+        return
+    }
+
     questionsWrapper.appendChild(questionsFragment)
 }
 

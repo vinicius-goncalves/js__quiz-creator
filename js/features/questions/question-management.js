@@ -1,92 +1,112 @@
 const modalContext = document.querySelector('[data-modal="question-management"]')
 
-const questionContext = {
+const TEXT_INPUT_INDEX = 2
+const INVALID_CLASS_NAME = 'invalid-field'
 
-    creator: {
-        ['data-question-management-content="description"']: {
-            ['[data-question-management-description="title"]']: 'Create a new quiz',
-            ['[data-question-management-description="detail"]']: "It's time to create a new quiz! Let's go there!"
-        },
+const questionControl = {
 
-        ['data-question-management="title"']: {
-            ['.question-section-header-title']: 'Quiz title',
-            ['.question-section-header-description']: "What is your quiz's title?"
-        },
-
-        ['data-question-details="answers-section"']: {
-            ['.question-section-header-title']: 'Answers',
-            ['.question-section-header-description']: "Define the quiz's answers. Pay attention: the checked radio means that one is going to be the correct answer."
-        },
-
-        ['data-question-management="buttons-container"']: {
-            ['[data-button="trigger-context"]']: 'Create quiz'
-        }
+    getDOMQuestionTitle: function() {
+        return modalContext.querySelector('[data-quiz-title="title"]')
     },
 
-    editor: {
-        ['data-question-management-content="description"']: {
-            ['[data-question-management-description="title"]']: 'Edit a quiz',
-            ['[data-question-management-description="detail"]']: "Update the quiz details"
-        },
+    getDOMQuestionInputAnswers: function() {
 
-        ['data-question-management="title"']: {
-            ['.question-section-header-title']: 'Quiz title',
-            ['.question-section-header-description']: "What is the updated quiz's title?"
-        },
+        const labelAnswers = this.getAnswers()
+        const inputAnswers = labelAnswers.map(answer => answer.children.item(TEXT_INPUT_INDEX))
 
-        ['data-question-details="answers-section"']: {
-            ['.question-section-header-title']: 'Answers',
-            ['.question-section-header-description']: "Update the quiz correct answer. The checked radio means that one is going to be the new correct answer."
-        },
+        return inputAnswers;
+    },
 
-        ['data-question-management="buttons-container"']: {
-            ['[data-button="trigger-context"]']: 'Update quiz'
+    getDOMCorrectAnswer: function() {
+
+        const correctAnswer = modalContext.querySelector('input[type="radio"]:checked')
+        return correctAnswer
+
+    },
+
+    getQuestionTitle: function() {
+
+        const questionTitle = modalContext.querySelector('[data-quiz-title="title"]')
+
+        if(questionTitle === null) {
+            return 'Untitled'
         }
+
+        return questionTitle.value.length === 0 ? 'Untitled' : questionTitle.value
+    },
+
+    getAnswers: function() {
+
+        const answersElements = modalContext.querySelectorAll('[data-question-details="answer"]')
+        const answersArr = [...answersElements]
+
+        return answersArr
+    },
+
+    getQuestionAnswers() {
+
+        const answers = this.getAnswers()
+        const answersChildren = answers.map(answer => answer.children)
+        const [ radioInputChildIndex, answerTextChildIndex ] = [1, 2]
+
+        const radioInputs = answersChildren.map(answerChild => answerChild.item(radioInputChildIndex))
+        const answersText = answersChildren.map(answerChild => answerChild.item(answerTextChildIndex).value)
+
+        const answersObject = radioInputs.reduce((answers, radioInput, index) => {
+
+            const letter = radioInput.dataset.letter
+            answers[letter] = answersText[index]
+
+            return answers
+
+        }, {})
+
+        return answersObject
+    },
+
+    getQuestionCorrectAnswer: function() {
+
+        const answers = this.getAnswers()
+        const radioInputs = answers.map(answer => answer.querySelector('input[type="radio"]'))
+        const correctAnswer = radioInputs.find(({ checked }) => checked === true)
+
+        return typeof correctAnswer === 'undefined' ? radioInputs[0].dataset.letter : correctAnswer.dataset.letter
+    },
+
+    createQuestionObject: function() {
+
+        const [ title, answers, answer ] = [
+            this.getQuestionTitle(),
+            this.getQuestionAnswers(),
+            this.getQuestionCorrectAnswer()
+        ]
+
+        return { title, answers, answer }
+    },
+
+    validateQuestionInputs() {
+
+        const questionTitleInput = modalContext.querySelector('[data-quiz-title="title"]')
+        const answersInputs = this.getAnswers().map(answer => answer.children.item(TEXT_INPUT_INDEX))
+
+        const fieldsInputs = [ questionTitleInput, ...answersInputs ]
+
+        for(const input of fieldsInputs) {
+            input.classList.toggle(INVALID_CLASS_NAME, input.value.length === 0)
+        }
+
+        const areAllValid = fieldsInputs.every(input => !input.classList.contains(INVALID_CLASS_NAME))
+
+        return areAllValid
+    },
+
+    clearQuestionInputs() {
+
+        this.getDOMQuestionTitle().value = ''
+        this.getDOMQuestionInputAnswers().forEach(input => input.value = '')
+        this.getDOMCorrectAnswer().checked = false
+
     }
 }
 
-function getCurrContext() {
-    const contextAttr = modalContext.getAttribute('data-management-context')
-    return contextAttr ? contextAttr : 'creator'
-}
-
-function loadContext() {
-
-    const currContext = questionContext[getCurrContext()]
-
-    Object.entries(currContext).forEach(([ wrapperSelector, sectionsSelectors ]) => {
-
-        const wrapperElement = modalContext.querySelector(`[${wrapperSelector}]`)
-
-        for(const [ sectionName, sectionText ] of Object.entries(sectionsSelectors)) {
-            const sectionFound = wrapperElement.querySelector(sectionName)
-            sectionFound.textContent = sectionText
-        }
-    })
-}
-
-function observeContextChanges() {
-
-    const observer = new MutationObserver(mutations => {
-
-        if(mutations.length >= 2) {
-            return
-        }
-
-        const mutation = mutations[0]
-        const mutationType = mutation.type
-
-        if(mutationType === 'attributes' && mutation.attributeName === 'data-management-context') {
-            loadContext()
-        }
-    })
-
-    observer.observe(modalContext, {
-            attributes: true,
-            attributeFilter: ['data-management-context'] })
-}
-
-;(() => {
-    loadContext()
-    observeContextChanges()
-})()
+export default questionControl

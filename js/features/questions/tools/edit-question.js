@@ -1,69 +1,84 @@
-import StorageManager from '../../storage/storage-manager.js'
+import StorageManager from '../../storage-manager.js'
+import createToast from '../../toast.js'
+import getCurrContext from '../question-context-manager.js'
+import questionControl from '../question-management.js'
 
-import { buildElement, clearTree } from '../../../utils/_utils.js'
-
-const updateQuestionBtn = document.querySelector('[data-button="update-quiz"]')
-const questionEditorWrapper = document.querySelector('[data-modal="question-editor"]')
+const modalContext = document.querySelector('[data-modal="question-management"]')
+const triggerContextBtn = modalContext.querySelector('[data-button="trigger-context"]')
 
 const questions = new StorageManager('questions')
-const allQuestions = await questions.getAll()
 
-function getAnswers() {
+async function findQuestion(questionId) {
 
-    const answersElements = questionEditorWrapper.querySelectorAll('[data-question-details="edit-answer"]')
-    const answersArr = [...answersElements]
-
-    return answersArr
-}
-
-async function updateQuestion(questionId, { title, answers, answer }) {
-    questions.update(questionId, { title, answers, answer })
-}
-
-async function edit(questionId) {
+    if(typeof questionId === 'undefined') {
+        throw new TypeError('The questionId is undefined. It must be a valid question id.')
+    }
 
     sessionStorage.setItem('editing-question-id', questionId)
 
-    if(typeof questionId === 'undefined') {
-        throw new Error('The questionId for editing is undefined.')
-    }
-
-    const questionFound = await questions.getById(questionId)
+    const questionFound = await questions.getById(questionId);
 
     if(!questionFound) {
         return
     }
 
-    const quizTitle = questionEditorWrapper.querySelector('[data-edit-quiz="title"]')
+    return questionFound;
+}
 
-    const { title, answers, answer } = questionFound
+async function loadQuestion(question) {
 
-    quizTitle.value = title
+    const title = questionControl.getDOMQuestionTitle()
+    const answers = questionControl.getDOMQuestionInputAnswers()
+    const correctAnswer = questionControl.getQuestionCorrectAnswer()
 
-    getAnswers().forEach(answerLabel => {
+    title.value = question.title
 
-        const text = answerLabel.querySelector('input[type="text"]')
-        const radio = answerLabel.querySelector('input[type="radio"]')
+    const questionAnswers = Object.entries(question.answers)
 
-        const letter = radio.dataset.letter
+    answers.forEach((answer, index) => {
 
-        if(answer === letter) {
-            radio.checked = true
+        answer.value = questionAnswers[index][1]
+        const currAnswer = questionAnswers[index].at(0)
+
+        if(currAnswer == correctAnswer) {
+            answer.parentElement.querySelector('input[type="radio"]').checked = true
         }
-
-        text.value = answers[letter]
     })
 }
 
-// updateQuestionBtn.addEventListener('click', () => {
+async function edit(questionId) {
 
-//     const editingQuestionId = sessionStorage.getItem('editing-question-id')
+    const questionFound = await findQuestion(questionId)
+    loadQuestion(questionFound)
+}
 
-//     const answers = getAnswers().map(answer => answer.querySelector('input[type="text"]').value)
-//     const correctAnswer = questionEditorWrapper.querySelector('input[type="radio"]:checked').dataset.letter
-//     const title = questionEditorWrapper.querySelector('[data-edit-quiz="title"]').value
+async function updateQuiz(questionId) {
 
-//     updateQuestion(editingQuestionId, { title, answers, answer: correctAnswer })
-// })
+    const title = questionControl.getQuestionTitle()
+    const answers = questionControl.getQuestionAnswers()
+    const answer = questionControl.getQuestionCorrectAnswer()
+
+    questions.update(questionId, { title, answers, answer })
+
+    createToast('Quiz updated!')
+}
+
+
+triggerContextBtn.addEventListener('click', () => {
+
+    if(getCurrContext() !== 'editor') {
+        return
+    }
+
+    const isQuizValid = questionControl.validateQuestionInputs()
+
+    if(!isQuizValid) {
+        createToast('Fill out all the fields before creating or editing a quiz', document.body)
+        return
+    }
+
+    const questionId = sessionStorage.getItem('editing-question-id')
+    updateQuiz(questionId)
+})
 
 export default edit

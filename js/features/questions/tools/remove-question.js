@@ -1,4 +1,4 @@
-import StorageManager from '../../storage/storage-manager.js'
+import StorageManager from '../../storage-manager.js'
 
 const questionsCache = new StorageManager('questions')
 const questions = await questionsCache.getAll()
